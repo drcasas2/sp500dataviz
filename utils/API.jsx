@@ -1,5 +1,5 @@
 const apiKey = 'N4V3NKK84ONUALBK';
-const monthlyData = 'TIME_SERIES_MONTHLY';
+const monthlyData = 'TIME_SERIES_MONTHLY_ADJUSTED';
 const stockTicker = 'SPY';
 const apiUrl = `https://www.alphavantage.co/query?function=${monthlyData}&symbol=${stockTicker}&apikey=${apiKey}`;
 

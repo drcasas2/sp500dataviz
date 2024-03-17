@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,7 +7,7 @@ import AreaGraph from '../assets/AreaGraph/AreaGraph.jsx'
 import API from '../../utils/API.jsx';
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0)
 
   const revenueData = [
     52.13,
@@ -30,11 +30,26 @@ function App() {
 
   const parseMonths = d3.timeParse("%B"); // %B is the  nomenclature used in the timeParse method in the d3 library that allows you to turn the months into the time format, and abbreviate/pull the month name from that newly formatted data.
 
+  const [monthlyClosingData, setMonthlyClosingData] = useState(null);
+
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              const data = await API.fetchData();
+              setMonthlyClosingData(data);
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          }
+      };
+
+      fetchData();
+  }, []);
+
   console.log('The data fetched at App.jsx is' + API.fetchData()) //work on fetching the S&P500 data
   return (
     <>
       <div className = "App">
-        <AreaGraph months = {months} revenueData = {revenueData} parseMonths={parseMonths}/>
+        <AreaGraph months = {months} revenueData = {revenueData} parseMonths={parseMonths} data={monthlyClosingData}/>
       </div>
       <div className="card">
       </div>

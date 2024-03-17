@@ -2,10 +2,19 @@ import * as d3 from "d3";
 import {useState, useEffect, useRef} from "react"
 import styles from './AreaGraph.module.css';
 
-const AreaGraph = ({months, revenueData, parseMonths}) => {
+const AreaGraph = ({months, revenueData, parseMonths, data}) => {
     const ref = useRef();
 
     useEffect(() => {
+
+    if (data) {
+        const dates = Object.keys(data['Monthly Adjusted Time Series']); // Get an array of dates
+        const values = dates.map(date => data['Monthly Adjusted Time Series'][date]['5. adjusted close']); // Get an array of adjusted close values for each date
+        console.log('Dates:', dates);
+        console.log('Values:', values);
+        // Continue with your D3.js chart creation using dates and values
+    }
+
     const canvas = d3.select(ref.current)
 
     const svg = canvas.append("svg")
@@ -80,7 +89,9 @@ const AreaGraph = ({months, revenueData, parseMonths}) => {
     mainCanvas.append("g")
                 .call(yAxis);
 
-    }, []);
+    }, [data]);
+
+    console.log("The data taken from AlphVantage is " + JSON.stringify(data));
 
     return (
     <svg width="100vw"
