@@ -28,9 +28,9 @@ function App() {
                 "June", "July", "August", "September", "October",
                 "November","December"];
 
-  const parseMonths = d3.timeParse("%B"); // %B is the  nomenclature used in the timeParse method in the d3 library that allows you to turn the months into the time format, and abbreviate/pull the month name from that newly formatted data.
-
   const [monthlyClosingData, setMonthlyClosingData] = useState(null);
+  const [dates, setDates] = useState([]);
+  const [values, setValues] = useState([]);
 
   useEffect(() => {
       const fetchData = async () => {
@@ -45,11 +45,22 @@ function App() {
       fetchData();
   }, []);
 
-  console.log('The data fetched at App.jsx is' + API.fetchData()) //work on fetching the S&P500 data
+  useEffect(() => {
+    if (monthlyClosingData) {
+        const monthlyData = monthlyClosingData['Monthly Adjusted Time Series'];
+        const dates = Object.keys(monthlyData);
+        const values = dates.map(date => monthlyData[date]['5. adjusted close']);
+
+        setDates(dates);
+        setValues(values);
+        //console.log(`values are ${values}`);
+    }
+}, [monthlyClosingData]);
+
   return (
     <>
       <div className = "App">
-        <AreaGraph months = {months} revenueData = {revenueData} parseMonths={parseMonths} data={monthlyClosingData}/>
+        <AreaGraph dates={dates} values = {values}/>
       </div>
       <div className="card">
       </div>
