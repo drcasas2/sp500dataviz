@@ -31,12 +31,13 @@ function App() {
   const [monthlyClosingData, setMonthlyClosingData] = useState(null);
   const [dates, setDates] = useState([]);
   const [values, setValues] = useState([]);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
       const fetchData = async () => {
           try {
-              const data = await API.fetchData();
-              setMonthlyClosingData(data);
+              const d = await API.fetchData();
+              setData(d);
           } catch (error) {
               console.error('Error fetching data:', error);
           }
@@ -46,16 +47,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (monthlyClosingData) {
-        const monthlyData = monthlyClosingData['Monthly Adjusted Time Series'];
-        const dates = Object.keys(monthlyData);
-        const values = dates.map(date => monthlyData[date]['5. adjusted close']);
-
-        setDates(dates);
-        setValues(values);
-        //console.log(`values are ${values}`);
+    if (data) {
+        setDates(data.map(dat => dat.priceDate));
+        setValues(data.map(dat => dat.close));
+        //console.log(`values are ${values} and dates are ${dates}`);
     }
-}, [monthlyClosingData]);
+}, [data]);
 
   return (
     <>
