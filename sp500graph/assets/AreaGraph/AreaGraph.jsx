@@ -55,7 +55,7 @@ const AreaGraph = ({dates, values}) => {
     //I can't get the line graph or circles to work, so I commented them out for now. But this would be the starting code to add a line and circles to trace the area graph data
     //We want to create a line that goes along the area we created
     //First, We Define The Graph Line
-    var lineData = values.map((d, i) => ({ date: parseDate(dates[i]), value: d }));
+    var lineData = values.map((d, i) => ({ value: d, date: parseDate(dates[i]) }));
     
     var valueLine = d3.line()
                         .x(d => x(d.date))

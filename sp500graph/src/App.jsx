@@ -9,24 +9,24 @@ import API from '../../utils/API.jsx';
 function App() {
   // const [count, setCount] = useState(0)
 
-  const revenueData = [
-    52.13,
-    53.98,
-    67.00,
-    89.70,
-    99.0,
-    130.28,
-    166.70,
-    234.98,
-    345.44,
-    443.34,
-    543.70,
-    556.13,
-  ];
+  // const revenueData = [
+  //   52.13,
+  //   53.98,
+  //   67.00,
+  //   89.70,
+  //   99.0,
+  //   130.28,
+  //   166.70,
+  //   234.98,
+  //   345.44,
+  //   443.34,
+  //   543.70,
+  //   556.13,
+  // ];
 
-  const months = ["January", "February", "March", "April", "May",
-                "June", "July", "August", "September", "October",
-                "November","December"];
+  // const months = ["January", "February", "March", "April", "May",
+  //               "June", "July", "August", "September", "October",
+  //               "November","December"];
 
   const [monthlyClosingData, setMonthlyClosingData] = useState(null);
   const [dates, setDates] = useState([]);
@@ -34,23 +34,19 @@ function App() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-      const fetchData = async () => {
-          try {
-              const d = await API.fetchData();
+      const fetchMonthlyData = async () => {
+              const d = await API.fetchMonthlyData();
               setData(d);
-          } catch (error) {
-              console.error('Error fetching data:', error);
-          }
       };
 
-      fetchData();
+      fetchMonthlyData();
   }, []);
 
   useEffect(() => {
     if (data) {
-        setDates(data.map(dat => dat.priceDate));
-        setValues(data.map(dat => dat.close));
-        //console.log(`values are ${values} and dates are ${dates}`);
+        setDates(data.values.map(dat => dat.datetime));
+        setValues(data.values.map(dat => dat.close));
+        console.log(`values are ${values} and dates are ${dates}`);
     }
 }, [data]);
 
