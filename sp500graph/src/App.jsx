@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
+import styles from './App.module.css';
 import * as d3 from 'd3';
 import AreaGraph from '../assets/AreaGraph/AreaGraph.jsx'
 import API from '../../utils/API.jsx';
@@ -45,7 +45,7 @@ function App() {
   useEffect(() => {
     if (data) {
         setDates(data.values.map(dat => dat.datetime));
-        setValues(data.values.map(dat => dat.close));
+        setValues(data.values.map(dat => parseFloat(dat.close)));
         console.log(`values are ${values} and dates are ${dates}`);
     }
 }, [data]);
@@ -53,7 +53,7 @@ function App() {
   return (
     <>
       <div className = "App">
-        <AreaGraph dates={dates} values = {values}/>
+        <AreaGraph height='auto' width='50%' dates={dates} values = {values}/>
       </div>
       <div className="card">
       </div>
