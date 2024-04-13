@@ -12,7 +12,7 @@ const AreaGraph = ({ dates, values }) => {
     useEffect(() => {
         const canvas = d3.select(ref.current);
 
-        const parseDate = d3.timeParse("%Y-%m-%d");
+        // const parseDate = d3.timeParse("%Y-%m-%d");
 
         const svg = canvas.append("svg")
             .attr("width", 600)
@@ -23,17 +23,31 @@ const AreaGraph = ({ dates, values }) => {
             .attr('height', graphHeight)
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
+            // //create tooltip div
+            
+            // const tooltip = d3.select("body")
+            //     .append("div")
+            //     .attr("class", "tooltip");
+
+            // //Create a second tooltip div for raw date
+
+            // const tooltipRawDate = d3.select("body")
+            //     .append("div")
+            //     .attr("class", "tooltip");
+
+            //Create our gradient
+
         const x = d3.scaleTime()
-            .domain(d3.extent(dates.map(date => parseDate(date))))
+            .domain(d3.extent(dates))
             .range([0, graphWidth]);
 
         const y = d3.scaleLinear()
             .range([graphHeight, 0])
-            .domain([0, d3.max(values, (d) => d)]);
-            console.log(d3.max(values, (d) => d));
+            .domain([0, d3.max(values)]);
+            console.log(d3.max(values));
 
         const areaChart = d3.area()
-            .x((d, i) => x(parseDate(dates[i])))
+            .x((d, i) => x(dates[i]))
             .y0(graphHeight)
             .y1((d) => y(d));
 
@@ -42,7 +56,7 @@ const AreaGraph = ({ dates, values }) => {
             .attr("class", styles.area)
             .attr("d", areaChart(values));
 
-        const lineData = values.map((d, i) => ({ value: d, date: parseDate(dates[i]) }));
+        const lineData = values.map((d, i) => ({ value: d, date: dates[i] }));
 
         const valueLine = d3.line()
             .x(d => x(d.date))
@@ -54,14 +68,86 @@ const AreaGraph = ({ dates, values }) => {
             .attr("class", styles.line)
             .attr("d", valueLine);
 
-        mainCanvas.selectAll("circle")
-            .data(values)
-            .enter()
-            .append("circle")
-            .attr("class", styles.circle)
-            .attr("cx", (d, i) => x(parseDate(dates[i])))
-            .attr("cy", (d) => y(d))
-            .attr("r", 5);
+        //Draw circles along path for each data point
+
+        // mainCanvas.selectAll("circle")
+        //     .data(values)
+        //     .enter()
+        //     .append("circle")
+        //     .attr("class", styles.circle)
+        //     .attr("cx", (d, i) => x(parseDate(dates[i])))
+        //     .attr("cy", (d) => y(d))
+        //     .attr("r", 5);
+
+        // // Add a circle element for tooltip
+
+        // const circle = svg.append("circle")
+        //     .attr("r", 0)
+        //     .attr("fill", "red")
+        //     .style("stroke", "white")
+        //     .attr("opacity", 0.7)
+        //     .style("pointer-events", "none");
+
+        // // Add red lines extending from the circle to the date and value
+
+        // const tooltipLineX = svg.append("line")
+        // .attr("class", "tooltip-line")
+        // .attr("id", "tooltip-line-x")
+        // .attr("stroke", "red")
+        // .attr("stroke-width", 1)
+        // .attr("stroke-dasharray", "2,2");
+        
+        // const tooltipLineY = svg.append("line")
+        // .attr("class", "tooltip-line")
+        // .attr("id", "tooltip-line-y")
+        // .attr("stroke", "red")
+        // .attr("stroke-width", 1)
+        // .attr("stroke-dasharray", "2,2");
+
+        // // Create a listening rectangle
+
+        // const listeningRect = svg.append("rect")
+        // .attr("width", graphWidth)
+        // .attr("height", graphHeight);
+
+    //     // Create the mouse move function
+
+    //     listeningRect.on("mousemove", function (event) {
+    //         const [xCoord] = d3.pointer(event, this);
+    //         const bisectDate = d3.bisector(d => d.dates).left;
+    //         const x0 = x.invert(xCoord);
+    //         const i = bisectDate(date, x0, 1);
+    //         const d0 = d.value[i-1];
+    //         const d = x0 - d0.Date > d1.Date -x0 ? d1 : d0;
+    //         const xPos = x(d.date);
+    //         const yPos = y(d.value);
+
+    //         console.log("d.date: " + d.date)
+
+    //     // Update the circle position
+
+    //     circle.attr("cx", xPos).attr("cy", yPos);
+
+    //     // Add transition for the circle radius
+
+    //     circle.transition()
+    //     .duration(50)
+    //     .attr("r", 5);
+
+    //     tooltipLineX.style("display", "block").attr("x1", xPos).attr("x2", xPos).attr("y1", 0).attr("y2", graphHeight)
+    //     tooltipLineY.style("display", "block").attr("y1", yPos).attr("y2", yPos).attr("x1", 0).attr("x2", graphWidth)
+        
+    //     // add in our tooltip
+
+    //     tooltip
+    //     .style("display", "block")
+    //     .style("left", `${graphWidth + 90}px`)
+    //     .style("top", `${yPos + 68}px`)
+    //     .html(`${d.value !== undefined ? d.value.toFixed(2) : 'N/A'}`);
+    
+    
+    
+    // });
 
         const xAxis = d3.axisBottom(x)
             .ticks(6)

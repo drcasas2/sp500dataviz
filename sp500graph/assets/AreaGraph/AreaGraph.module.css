@@ -1,7 +1,7 @@
 .line {
     fill: none;
     stroke: darkblue;
-    stroke-width: 3px;
+    stroke-width: 2px;
 }
 
 .circle {
@@ -21,5 +21,9 @@ g .tick text {
 g .tick line {
     color: darkblue;
     stroke-width: 2px;
+}
+
+svg {
+    background-color: rgb(72, 72, 72);
 }
 

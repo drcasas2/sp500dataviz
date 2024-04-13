@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 const apiKey = '58e9634c43c04daaa1cd52796aa74f7aef';
 //const apiKey = 'N4V3NKK84ONUALBK';
 //const apiToken = 'pk_ff7603d357ef45529330f9757e0b7ed7';
@@ -33,7 +35,15 @@ const API = {
             }
             const data = await response.json();
             console.log('Monthly data:', data);
-            return data;
+            const parseDate = d3.timeParse("%Y-%m-%d");
+            const parsedData = data.values.map(d => ({
+                Date: parseDate(d.datetime),
+                Close: parseFloat(d.close)
+            }));
+            console.log('Processed data:', parsedData);
+
+            // Return the processed data
+            return parsedData;
         } catch (error) {
             console.error('Error fetching data:', error);
             throw error; // Rethrow the error for handling in the calling code if needed

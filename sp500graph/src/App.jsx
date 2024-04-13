@@ -35,20 +35,20 @@ function App() {
 
   useEffect(() => {
       const fetchMonthlyData = async () => {
-              const d = await API.fetchMonthlyData();
-              setData(d);
+              const data = await API.fetchMonthlyData();
+              setDates(data.map(d => d.Date));
+              setValues(data.map(d => d.Close));
       };
 
       fetchMonthlyData();
   }, []);
 
   useEffect(() => {
-    if (data) {
-        setDates(data.values.map(dat => dat.datetime));
-        setValues(data.values.map(dat => parseFloat(dat.close)));
-        console.log(`values are ${values} and dates are ${dates}`);
+    if (dates.length > 0 && values.length > 0) {
+      console.log('Dates:', dates);
+      console.log('Values:', values);
     }
-}, [data]);
+}, [dates, values]);
 
   return (
     <>
