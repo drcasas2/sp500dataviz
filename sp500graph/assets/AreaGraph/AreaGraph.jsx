@@ -1,9 +1,15 @@
+// You need to figure out why there is a big black box in front of your graph when you tried to add a tooltip
+
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 import styles from './AreaGraph.module.css';
+import useMeasure from "react-use-measure";
+import { parseISO } from "date-fns";
 
 const AreaGraph = ({ dates, values }) => {
     const ref = useRef();
+    // const tooltipRef = useRef(null);
+    let [reference, bounds] = useMeasure();
     
     const margin = { top: 20, right: 20, bottom: 20, left: 50 };
     const graphWidth = 600 - margin.left - margin.right;
@@ -79,36 +85,60 @@ const AreaGraph = ({ dates, values }) => {
         //     .attr("cy", (d) => y(d))
         //     .attr("r", 5);
 
-        // // Add a circle element for tooltip
+        // Add mousemove event listener for tooltip
+        // svg.on("mousemove", function(event) {
+        //     const [xCoord] = d3.pointer(event, this);
+        //     const bisectDate = d3.bisector(d => d.date).left;
+        //     const x0 = x.invert(xCoord);
+        //     const i = bisectDate(lineData, x0, 1);
+        //     const d0 = lineData[i - 1];
+        //     const d1 = lineData[i];
+        //     const d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        //     const xPos = x(d.date);
+        //     const yPos = y(d.value);
 
-        // const circle = svg.append("circle")
-        //     .attr("r", 0)
-        //     .attr("fill", "red")
-        //     .style("stroke", "white")
-        //     .attr("opacity", 0.7)
-        //     .style("pointer-events", "none");
+        //     // Update tooltip position and content
+        //     tooltipRef.current.style.display = "block";
+        //     tooltipRef.current.style.left = `${xPos}px`;
+        //     tooltipRef.current.style.top = `${yPos}px`;
+        //     tooltipRef.current.innerHTML = `${d.value !== undefined ? d.value.toFixed(2) : 'N/A'}`;
+        // });
 
-        // // Add red lines extending from the circle to the date and value
+    //     // Hide tooltip on mouseout
+    //     svg.on("mouseout", () => {
+    //         tooltipRef.current.style.display = "none";
+    //     });
 
-        // const tooltipLineX = svg.append("line")
-        // .attr("class", "tooltip-line")
-        // .attr("id", "tooltip-line-x")
-        // .attr("stroke", "red")
-        // .attr("stroke-width", 1)
-        // .attr("stroke-dasharray", "2,2");
+    //     // Add a circle element for tooltip
+
+    //     const circle = svg.append("circle")
+    //         .attr("r", 0)
+    //         .attr("fill", "red")
+    //         .style("stroke", "white")
+    //         .attr("opacity", 0.7)
+    //         .style("pointer-events", "none");
+
+    //     // Add red lines extending from the circle to the date and value
+
+    //     const tooltipLineX = svg.append("line")
+    //     .attr("class", "tooltip-line")
+    //     .attr("id", "tooltip-line-x")
+    //     .attr("stroke", "red")
+    //     .attr("stroke-width", 1)
+    //     .attr("stroke-dasharray", "2,2");
         
-        // const tooltipLineY = svg.append("line")
-        // .attr("class", "tooltip-line")
-        // .attr("id", "tooltip-line-y")
-        // .attr("stroke", "red")
-        // .attr("stroke-width", 1)
-        // .attr("stroke-dasharray", "2,2");
+    //     const tooltipLineY = svg.append("line")
+    //     .attr("class", "tooltip-line")
+    //     .attr("id", "tooltip-line-y")
+    //     .attr("stroke", "red")
+    //     .attr("stroke-width", 1)
+    //     .attr("stroke-dasharray", "2,2");
 
-        // // Create a listening rectangle
+    //     // Create a listening rectangle
 
-        // const listeningRect = svg.append("rect")
-        // .attr("width", graphWidth)
-        // .attr("height", graphHeight);
+    //     const listeningRect = svg.append("rect")
+    //     .attr("width", graphWidth)
+    //     .attr("height", graphHeight);
 
     //     // Create the mouse move function
 
@@ -116,13 +146,12 @@ const AreaGraph = ({ dates, values }) => {
     //         const [xCoord] = d3.pointer(event, this);
     //         const bisectDate = d3.bisector(d => d.dates).left;
     //         const x0 = x.invert(xCoord);
-    //         const i = bisectDate(date, x0, 1);
-    //         const d0 = d.value[i-1];
+    //         const i = bisectDate(dates, x0, 1);
+    //         const d0 = values[i-1];
+    //         const d1 = dates[i];
     //         const d = x0 - d0.Date > d1.Date -x0 ? d1 : d0;
     //         const xPos = x(d.date);
     //         const yPos = y(d.value);
-
-    //         console.log("d.date: " + d.date)
 
     //     // Update the circle position
 
@@ -167,7 +196,10 @@ const AreaGraph = ({ dates, values }) => {
     }, [dates, values]);
 
     return (
-        <svg width={graphWidth + margin.left + margin.right} height={graphHeight + margin.top + margin.bottom} id="areagraph" ref={ref} />
+        <div className="relative h-full w-full" ref={reference}>
+            <svg width={graphWidth + margin.left + margin.right} height={graphHeight + margin.top + margin.bottom} id="areagraph" ref={ref} />
+            {/* <div ref={tooltipRef} className="tooltip" style={{ display: "none" }}></div> */}
+        </div>
     );
 };
 
