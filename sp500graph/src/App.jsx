@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react'
+import useMeasure from "react-use-measure";
+import { parseISO } from "date-fns";
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import styles from './App.module.css';
+//import styles from './App.module.css';
+//import './index.css';
 import * as d3 from 'd3';
 import AreaGraph from '../assets/AreaGraph/AreaGraph.jsx'
-import API from '../../utils/API.jsx';
+import AreaGraph2 from '../assets/AreaGraph/AreaGraph2.jsx'
+import API from '../utils/API.jsx';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -28,17 +32,20 @@ function App() {
   //               "June", "July", "August", "September", "October",
   //               "November","December"];
 
+  let [ref, bounds] = useMeasure();
   const [monthlyClosingData, setMonthlyClosingData] = useState(null);
   const [dates, setDates] = useState([]);
   const [values, setValues] = useState([]);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
       const fetchMonthlyData = async () => {
-              const data = await API.fetchMonthlyData();
-              setDates(data.map(d => d.Date));
-              setValues(data.map(d => d.Close));
-      };
+          const fetchedData = await API.fetchMonthlyData();
+          const parsedData = fetchedData.map(d => [d.Date, d.Close]);
+          setData(parsedData);
+          setDates(data.map(d => d.Date));
+          setValues(data.map(d => d.Close));
+          }
 
       fetchMonthlyData();
   }, []);
@@ -51,13 +58,11 @@ function App() {
 }, [dates, values]);
 
   return (
-    <>
-      <div className = "App">
-        <AreaGraph height='auto' width='50%' dates={dates} values = {values}/>
-      </div>
-      <div className="card">
-      </div>
-    </>
+    <div className = "my-2 mx-2 h-40 w-full items-center justify-center text-blue-500" ref={ref}>
+      {bounds.width >0 && (
+        <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+      )}
+    </div>
   )
 }
 
