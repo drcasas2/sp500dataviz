@@ -4,20 +4,20 @@ import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 //import styles from './AreaGraph.module.css';
 import useMeasure from "react-use-measure";
-import { parseISO } from "date-fns";
+import { format } from "date-fns";
 
 const AreaGraph2 = ({ height, width, dates, values, data }) => {
     // const tooltipRef = useRef(null);
     //let [reference, bounds] = useMeasure();
     
-    const margin = { top: 20, right: 20, bottom: 20, left: 35 };
+    const margin = { top: 20, right: 20, bottom: 15, left: 35 };
     const graphWidth = 600 - margin.left - margin.right;
-    const graphHeight = 600 - margin.top - margin .bottom;
+    const graphHeight = 600 - margin.top - margin.bottom;
 
     // const width= graphWidth + margin.left + margin.right;
     // const height= graphHeight + margin.top + margin.bottom;
 
-    let xScale = d3.scaleLinear()
+    let xScale = d3.scaleTime()
             .domain(d3.extent(data.map((d) => d[0])))
             .range([margin.left, width-margin.right]);
             
@@ -58,6 +58,31 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             style={{ fontSize: '10px', fill: '#718096' }}
                         >
                             {points}
+                        </text>
+                    </ g>
+                ))}
+
+                {xScale.ticks(20).map((date) => (
+                    <g
+                        transform = {`translate(${xScale(date)},${height - 5})`} 
+                        className="text-gray-400" 
+                        key={date}
+                    >
+                        <line
+                            //key={`line-${index}`}
+                            y1={height}
+                            y2={margin.top - height}
+                            stroke='#718096'
+                            strokeWidth={0.5}
+                            strokeDasharray="2,4"
+                        />
+                        <text
+                           //key={`text-${index}`}
+                           alignmentBaseline="middle"
+                            //y={margin.bottom - 5}
+                            style={{ fontSize: '8px', fill: '#718096' }}
+                        >
+                            {format(date, "yyyy")}
                         </text>
                     </ g>
                 ))}
