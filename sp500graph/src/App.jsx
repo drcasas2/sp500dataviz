@@ -1,70 +1,68 @@
 import { useState, useEffect } from 'react'
+import useMeasure from "react-use-measure";
+import { parseISO } from "date-fns";
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
+//import styles from './App.module.css';
+//import './index.css';
 import * as d3 from 'd3';
 import AreaGraph from '../assets/AreaGraph/AreaGraph.jsx'
-import API from '../../utils/API.jsx';
+import AreaGraph2 from '../assets/AreaGraph/AreaGraph2.jsx'
+import API from '../utils/API.jsx';
 
 function App() {
   // const [count, setCount] = useState(0)
 
-  const revenueData = [
-    52.13,
-    53.98,
-    67.00,
-    89.70,
-    99.0,
-    130.28,
-    166.70,
-    234.98,
-    345.44,
-    443.34,
-    543.70,
-    556.13,
-  ];
+  // const revenueData = [
+  //   52.13,
+  //   53.98,
+  //   67.00,
+  //   89.70,
+  //   99.0,
+  //   130.28,
+  //   166.70,
+  //   234.98,
+  //   345.44,
+  //   443.34,
+  //   543.70,
+  //   556.13,
+  // ];
 
-  const months = ["January", "February", "March", "April", "May",
-                "June", "July", "August", "September", "October",
-                "November","December"];
+  // const months = ["January", "February", "March", "April", "May",
+  //               "June", "July", "August", "September", "October",
+  //               "November","December"];
 
+  let [ref, bounds] = useMeasure();
   const [monthlyClosingData, setMonthlyClosingData] = useState(null);
   const [dates, setDates] = useState([]);
   const [values, setValues] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-      const fetchData = async () => {
-          try {
-              const data = await API.fetchData();
-              setMonthlyClosingData(data);
-          } catch (error) {
-              console.error('Error fetching data:', error);
+      const fetchMonthlyData = async () => {
+          const fetchedData = await API.fetchMonthlyData();
+          const parsedData = fetchedData.map(d => [d.Date, d.Close]);
+          setData(parsedData);
+          setDates(data.map(d => d.Date));
+          setValues(data.map(d => d.Close));
           }
-      };
 
-      fetchData();
+      fetchMonthlyData();
   }, []);
 
   useEffect(() => {
-    if (monthlyClosingData) {
-        const monthlyData = monthlyClosingData['Monthly Adjusted Time Series'];
-        const dates = Object.keys(monthlyData);
-        const values = dates.map(date => monthlyData[date]['5. adjusted close']);
-
-        setDates(dates);
-        setValues(values);
-        //console.log(`values are ${values}`);
+    if (dates.length > 0 && values.length > 0) {
+      console.log('Dates:', dates);
+      console.log('Values:', values);
     }
-}, [monthlyClosingData]);
+}, [dates, values]);
 
   return (
-    <>
-      <div className = "App">
-        <AreaGraph dates={dates} values = {values}/>
-      </div>
-      <div className="card">
-      </div>
-    </>
+    <div className = "my-2 mx-2 h-40 w-full items-center justify-center text-blue-500" ref={ref}>
+      {bounds.width >0 && (
+        <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+      )}
+    </div>
   )
 }
 
