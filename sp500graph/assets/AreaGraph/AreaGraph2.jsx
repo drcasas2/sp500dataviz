@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import useMeasure from "react-use-measure";
 import { format } from "date-fns";
 
+
 const AreaGraph2 = ({ height, width, dates, values, data }) => {
     // const tooltipRef = useRef(null);
     //let [reference, bounds] = useMeasure();
@@ -16,6 +17,15 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
 
     // const width= graphWidth + margin.left + margin.right;
     // const height= graphHeight + margin.top + margin.bottom;
+
+    // console.log(data);
+    // const data2 = Object.entries(data).map(([key, value]) => [key, value]);
+    // console.log(`data2: ${data2}`);
+    console.log(typeof(data[0][1]));
+    console.log(data[0][0]);
+    // const data3 = data2.map(([_, value]) => [value[0], value[1]]);
+    // console.log(`data3: ${data3}`);
+    const parseDate = d3.timeParse("%Y-%m-%d")
 
     let xScale = d3.scaleTime()
             .domain(d3.extent(data.map((d) => d[0])))
@@ -62,7 +72,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                     </ g>
                 ))}
 
-                {xScale.ticks(20).map((date) => (
+                {xScale.ticks(8).map((date) => (
                     <g
                         transform = {`translate(${xScale(date)},${height - 5})`} 
                         className="text-gray-400" 
@@ -70,16 +80,16 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                     >
                         <line
                             //key={`line-${index}`}
-                            y1={height}
-                            y2={margin.top - height}
+                            y1={height - 170}
+                            y2={margin.bottom - height}
                             stroke='#718096'
                             strokeWidth={0.5}
                             strokeDasharray="2,4"
                         />
                         <text
                            //key={`text-${index}`}
-                           alignmentBaseline="middle"
-                            //y={margin.bottom - 5}
+                        //    alignmentBaseline="middle"
+                            y={0}
                             style={{ fontSize: '8px', fill: '#718096' }}
                         >
                             {format(date, "yyyy")}

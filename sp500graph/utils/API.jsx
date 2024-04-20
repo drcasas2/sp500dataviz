@@ -36,10 +36,10 @@ const API = {
             const data = await response.json();
             console.log('Monthly data:', data);
             const parseDate = d3.timeParse("%Y-%m-%d");
-            const parsedData = data.values.map(d => ({
-                Date: parseDate(d.datetime),
-                Close: parseFloat(d.close)
-            }));
+            const parsedData = data.values.map(d => ([
+                parseDate(d.datetime),
+                parseFloat(d.close)
+            ]));
             console.log('Processed data:', parsedData);
 
             // Return the processed data

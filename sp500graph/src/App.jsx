@@ -37,29 +37,26 @@ function App() {
   const [dates, setDates] = useState([]);
   const [values, setValues] = useState([]);
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchMonthlyData = async () => {
+    const fetchedData = await API.fetchMonthlyData();
+    setData(fetchedData);
+    setDates(data.map(d => d.Date));
+    setValues(data.map(d => d.Close));
+    setLoading(false);
+    };
 
   useEffect(() => {
-      const fetchMonthlyData = async () => {
-          const fetchedData = await API.fetchMonthlyData();
-          const parsedData = fetchedData.map(d => [d.Date, d.Close]);
-          setData(parsedData);
-          setDates(data.map(d => d.Date));
-          setValues(data.map(d => d.Close));
-          }
-
       fetchMonthlyData();
   }, []);
 
-  useEffect(() => {
-    if (dates.length > 0 && values.length > 0) {
-      console.log('Dates:', dates);
-      console.log('Values:', values);
-    }
-}, [dates, values]);
-
   return (
     <div className = "my-2 mx-2 h-40 w-full items-center justify-center text-blue-500" ref={ref}>
-      {bounds.width >0 && (
+      { loading ? (
+          <p>Loading...</p>
+          ) : (
+            bounds.width > 0 &&
         <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
       )}
     </div>
