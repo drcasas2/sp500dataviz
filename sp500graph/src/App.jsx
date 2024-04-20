@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import useMeasure from "react-use-measure";
+//import useMeasure from "react-use-measure";
+import { useMeasure } from "@uidotdev/usehooks";
 import { parseISO } from "date-fns";
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -67,7 +68,7 @@ function App() {
         className = "my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}
       >
         { loading ? (
-            <p>Loading...</p>
+            <h1 className="w-full text-2xl text-center items-center justify-center">Loading...</h1>
             ) : (
               bounds.width > 0 &&
           <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>

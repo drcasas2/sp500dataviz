@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 const AreaGraph2 = ({ height, width, dates, values, data }) => {
     // const tooltipRef = useRef(null);
     //let [reference, bounds] = useMeasure();
-    
+    const tooltipRef = useRef();
     const margin = { top: 20, right: 20, bottom: 15, left: 35 };
     const graphWidth = 600 - margin.left - margin.right;
     const graphHeight = 600 - margin.top - margin.bottom;
@@ -47,13 +47,13 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
     // const data3 = data2.map(([_, value]) => [value[0], value[1]]);
     // console.log(`data3: ${data3}`);
 
-    let startYear = startOfYear(data.at(0)[0]);
-    let endYear = endOfYear(data.at(-1)[0]);
-    let years = eachYearOfInterval({ start: startYear, end: endYear});
+    let startYear = startOfYear(data.at(0)[0]); // Takes first datetime data point in the ascending-order dataset and sets the datetime data point to the start of that year
+    let endYear = endOfYear(data.at(-1)[0]); //  Takes the last datetime data point in the ascending-order dataset and sets the datetime data point to the end of that year
+    let years = eachYearOfInterval({ start: startYear, end: endYear}); // Creates an array of one datetime object from each year that starts on 01 Jan 00:00:00
     console.log(years);
 
     let xScale = d3.scaleTime()
-            .domain([startYear, endYear]) // Passed in an array of the minimum and maximum dates in the passed in data
+            .domain([startYear, endYear]) // Passed in an array of the minimum and maximum dates in the passed in data. Note that the d3.domain() method requires an Array of 2 values - .domain([start, end])
             //data[0][0], data[data.length - 1][0]
             //d3.extent(data.map((d) => d[0]))
             .range([margin.left, width-margin.right]);
@@ -63,12 +63,32 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
             .range([height-margin.bottom, margin.top]);
 
     let line = d3.line()
-            .x((d) => xScale(d[0])) //Returns the x value of each point in the data, and wraps it in the xScale to scale the data across the graph
-            .y((d)=> yScale(d[1]));
+            .x((d) => xScale(d[0])) //Returns the x value of each point in the data, and wraps it in the xScale to scale the data across the graph. In this dataset, the first value in each array of value pairs (aka the 'x' in the [x, y] array) is the datetime object.
+            .y((d)=> yScale(d[1])); //Returns the y value of each point in the data, and wraps it in the yScale to scale the data uo and down the graph. In this dataset, the second value in each array of value pairs (aka the 'y' in the [x, y] array) is the S&P500 points value in a floating point number form.
 
-    let result = line(data);
+    let result = line(data); // Takes the data passed into the component via a prop, and passes it through the d3.line() function to create the drawing line for the d attribute in the <path> element that will be embedded in the <svg> element.
 
     console.log(yScale.ticks());
+
+    const mouseover = function (event, d) {
+        console.log(d[0], d[1]); //I need to find out what d is. It is currently creating an error
+        const tooltipDiv = tooltipRef.current;
+        if (tooltipDiv) {
+          d3.select(tooltipDiv).transition().duration(200).style("opacity", 0.9);
+          d3.select(tooltipDiv)
+            .html(d[0], d[1]) //Need to figure out what this .html element means. I think it has to do creating an html element and reading the values in it.
+            // TODO: some logic when the tooltip could go out from container
+            .style("left", event.pageX + "px")
+            .style("top", event.pageY - 28 + "px");
+        }
+      };
+  
+      const mouseout = () => {
+        const tooltipDiv = tooltipRef.current;
+        if (tooltipDiv) {
+          d3.select(tooltipDiv).transition().duration(500).style("opacity", 0);
+        }
+      };
 
     //data.map(d => console.log(years.findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? "" : format(d[0], "yyyy")))
 
@@ -77,10 +97,11 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
             <svg className="" viewBox={`0 0 ${width} ${height+15}`}>
                 
                 {/* X-Axis Shading */}
-                {years.map((year, i) => (
-                    <g
-                        transform = {`translate(${xScale(year)},0)`} 
-                        className="text-gray-400" 
+                {/* I did the X-Axis Shading last and just brought it up to the top so that it draws onto the svg first, so the line draws over the shading. SVG elements draw in the order they are shown, so these shaded boxes are drawn at the bottom, before the line or dotted axes. */}
+                {years.map((year, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
+                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
+                        transform = {`translate(${xScale(year)},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
+                        className="fill-current" 
                         key={year}
                     >
                         <line
@@ -95,7 +116,9 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             <rect
                                 width={xScale(endOfYear(year)) - xScale(year)}
                                 height={height - margin.bottom}
+                                //className='text-green-800'
                                 fill='#F0F4FF'
+                                // This color is good for the rectangles: #F0F4FF
                                 // fillOpacity='8%'
                             />
                         )}
@@ -188,11 +211,21 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         cx={xScale(d[0])}
                         cy={yScale(d[1])}
                         fill="currentColor"
+                        onMouseOver={mouseover}
+                        onMouseOut={mouseout}
                         stroke={years.findIndex(y => isSameYear(y, d[0])) %2 == 1 ? '#F0F4FF' : 'white'}
                         // strokeOpacity={years.findIndex(y => isSameYear(y, d[0])) %2 == 1 ? '100%' : '100%'}
                         strokeWidth={0.5}
                     />
                 ))}
+
+      {/* .attr("r", 5)
+      .attr("fill", "#69b3a2")
+      .on("mouseover", mouseover)
+      .on("mouseout", mouseout); */}
+                    <div className="tooltip" ref={tooltipRef}>
+
+                    </div>
             </svg>
         </>
     );
