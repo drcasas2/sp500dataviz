@@ -41,7 +41,8 @@ function App() {
 
   const fetchMonthlyData = async () => {
     const fetchedData = await API.fetchMonthlyData();
-    setData(fetchedData);
+    const sortedData = fetchedData.reverse(); // Sorted the data in ascending order (oldest date first).
+    setData(sortedData);
     setDates(data.map(d => d.Date));
     setValues(data.map(d => d.Close));
     setLoading(false);
@@ -52,7 +53,7 @@ function App() {
   }, []);
 
   return (
-    <div className = "my-2 mx-2 h-40 w-full items-center justify-center text-blue-500" ref={ref}>
+    <div className = "my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}>
       { loading ? (
           <p>Loading...</p>
           ) : (
