@@ -9,6 +9,7 @@ import * as d3 from 'd3';
 import AreaGraph from '../assets/AreaGraph/AreaGraph.jsx'
 import AreaGraph2 from '../assets/AreaGraph/AreaGraph2.jsx'
 import API from '../utils/API.jsx';
+import { motion } from "framer-motion";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -53,14 +54,26 @@ function App() {
   }, []);
 
   return (
-    <div className = "my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}>
-      { loading ? (
-          <p>Loading...</p>
-          ) : (
-            bounds.width > 0 &&
-        <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
-      )}
-    </div>
+    <>
+      <motion.h1
+      className='text-center text-2xl font-extrabold font-sans text-blue-500'
+      initial = {{ opacity: 0}}
+      animate = {{ opacity: 1 }}
+      transition = {{ duration: 4, delay: 0.5, type: "spring" }}
+      >
+        S&P 500 Data (1993 - 2024)
+        </motion.h1>
+      <div
+        className = "my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}
+      >
+        { loading ? (
+            <p>Loading...</p>
+            ) : (
+              bounds.width > 0 &&
+          <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+        )}
+      </div>
+    </>
   )
 }
 
