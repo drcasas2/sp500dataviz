@@ -74,7 +74,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
 
     return (
         <>
-            <svg className="" viewBox={`0 0 ${width} ${height+10}`}>
+            <svg className="" viewBox={`0 0 ${width} ${height+15}`}>
                 
                 {/* X-Axis Shading */}
                 {years.map((year, i) => (
@@ -103,10 +103,10 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         <text
                            //key={`text-${index}`}
                         //    alignmentBaseline="middle"
-                            x={((xScale(endOfYear(year)) - xScale(year))/2)+3}
-                            y={height - 8}
-                            textAnchor='end'
-                            style={{ fontSize: '6px', fill: '#718096' }}
+                            x={((xScale(endOfYear(year)) - xScale(year))/2)}
+                            y={height - 5}
+                            textAnchor='middle'
+                            style={{ fontSize: '10px', fill: '#718096' }}
                         >
                             {format(year, "yy")}
                         </text>
@@ -161,7 +161,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             x={-6}
                             y={1}
                             transform={`rotate(50 ${0},${0})`}
-                            style={{ fontSize: '10px', fill: '#718096' }}
+                            style={{ fontSize: '12px', fill: '#718096' }}
                         >
                             {/* xScale(endOfYear(year)) - xScale(year) */}
                             {format(date, "yyyy")}
