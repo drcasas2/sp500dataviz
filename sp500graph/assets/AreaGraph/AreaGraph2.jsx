@@ -14,9 +14,11 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
     const margin = { top: 20, right: 20, bottom: 15, left: 35 };
     const graphWidth = 600 - margin.left - margin.right;
     const graphHeight = 600 - margin.top - margin.bottom;
+    let previousData = [];
 
     const [xPos, setXPos] = useState(0);
     const [yPos, setYPos] = useState(0);
+    const [prevD, setPrevD] = useState([]);
 
     // const width= graphWidth + margin.left + margin.right;
     // const height= graphHeight + margin.top + margin.bottom;
@@ -75,16 +77,16 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
 
     let result = line(data); // Takes the data passed into the component via a prop, and passes it through the d3.line() function to create the drawing line for the d attribute in the <path> element that will be embedded in the <svg> element.
 
-    // console.log(yScale.ticks());
-
     const mouseover = (event, d) => {
         setXPos(d[0])
         setYPos(d[1])
-        event.target.style['fill-opacity'] = '0.5';
+        //event.target.style['stroke-opacity'] = '1';
+        event.target.style['fill-opacity'] = '1';
         // console.log(format(xPos, 'MM/dd/yyyy'), yPos)
         };
   
       const mouseout = (event) => {
+        //event.target.style['stroke-opacity'] = '0';
         event.target.style['fill-opacity'] = '0';
       };
 
@@ -93,7 +95,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
     return (
         <>
             <svg className="" viewBox={`0 0 ${width} ${height+15}`}>
-                {/* X-Axis Hidden Rectangles */}
+                {/* X-Axis Alternate Shading */}
                 {years.map((year, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
                     <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
                         transform = {`translate(${xScale(year)},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
@@ -195,6 +197,70 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                     fill="none"
                     stroke="currentColor"
                 />
+                {/* X-Axis Hidden Rectangles*/}
+                {/* I did the X-Axis Shading last and just brought it up to the top so that it draws onto the svg first, so the line draws over the shading. SVG elements draw in the order they are shown, so these shaded boxes are drawn at the bottom, before the line or dotted axes. */}
+                {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
+                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
+                        transform = {`translate(${xScale(startOfMonth(d[0]))},${yScale(yPos) - margin.bottom + 15})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
+                        className="fill-current" 
+                        key={d} 
+                    >
+                        {
+                            <rect
+                                width={xScale(endOfMonth(d[0])) - xScale(startOfMonth(d[0]))}
+                                height={height - yScale(yPos - 5) + margin.bottom} // This now tracks under the curve, but it doesn't work if my mouse is over the curve. The line also extends below the axis, which I need to fix.
+                                className='highlightRectX'
+                                //className='text-green-800'
+                                fill='darkblue'
+                                fillOpacity='0'
+                                onMouseOver={(e) => mouseover(e, d)}
+                                onMouseOut={(e) => mouseout(e)}
+                                // This color is good for the rectangles: #F0F4FF
+                                // fillOpacity='8%'
+                            />
+                        }
+                    </ g>
+                ))}
+                {/* Y-Axis Hidden Rectangles */}
+                {/* {data.map((d, i) => {
+                    let heightDifference;
+                    console.log("previousData[1] before: " + previousData[1])
+
+                    if (previousData < d[1]) {
+                        heightDifference = d[1] - previousData[1];
+                    } 
+                    if (previousData > d[1]) {
+                        heightDifference = previousData[1] - d[1];
+                    }
+
+                    previousData = d;
+                    console.log("d[1]: " + d[1])
+                    console.log("previousData[1] after: " + previousData[1])
+                    console.log("heightDifference: " + heightDifference);
+                    console.log("yScale: " + yScale(d[1]));
+                    return (
+                        <g
+                            transform = {`translate(0,${yScale(d[1])})`} 
+                            className="" 
+                            key={i}
+                        >
+                            {
+                                <rect
+                                    width={width - margin.right - margin.left}
+                                    height={height - heightDifference}
+                                    className='highlightRectY'
+                                    //className='text-green-800'
+                                    fill='black'
+                                    fill-opacity='0.5'
+                                    onMouseOver={(e) => mouseover(e, d)}
+                                    onMouseOut={(e) => mouseout(e)}
+                                    // This color is good for the rectangles: #F0F4FF
+                                    // fillOpacity='8%'
+                                />
+                            }
+                        </ g>
+                    );
+                })} */}
                 {/* Circles */}
                 {data.map((d, i) => (
                     <motion.circle
@@ -210,31 +276,6 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         // strokeOpacity={years.findIndex(y => isSameYear(y, d[0])) %2 == 1 ? '100%' : '100%'}
                         strokeWidth={0.5}
                     />
-                ))}
-                {/* X-Axis  */}
-                {/* I did the X-Axis Shading last and just brought it up to the top so that it draws onto the svg first, so the line draws over the shading. SVG elements draw in the order they are shown, so these shaded boxes are drawn at the bottom, before the line or dotted axes. */}
-                {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
-                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                        transform = {`translate(${xScale(d[0])},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                        className="fill-current" 
-                        key={d}
-                    >
-                        {
-                            <rect
-                                width={xScale(endOfMonth(d[0])) - xScale(d[0])}
-                                height={height - margin.bottom}
-                                className='highlightRect'
-                                //className='text-green-800'
-                                fill='darkblue'
-                                fill-opacity='0'
-                                onMouseOver={(e) => mouseover(e, d)}
-                                onMouseOut={(e) => mouseout(e)}
-                                // This color is good for the rectangles: #F0F4FF
-                                // fillOpacity='8%'
-                            />
-
-                        }
-                    </ g>
                 ))}
       {/* .attr("r", 5)
       .attr("fill", "#69b3a2")
