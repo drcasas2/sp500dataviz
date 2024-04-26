@@ -81,13 +81,13 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
         setXPos(d[0])
         setYPos(d[1])
         //event.target.style['stroke-opacity'] = '1';
-        event.target.style['fill-opacity'] = '1';
+        event.target.style['stroke-opacity'] = '1';
         // console.log(format(xPos, 'MM/dd/yyyy'), yPos)
         };
   
       const mouseout = (event) => {
         //event.target.style['stroke-opacity'] = '0';
-        event.target.style['fill-opacity'] = '0';
+        event.target.style['stroke-opacity'] = '0';
       };
 
     //data.map(d => console.log(years.findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? "" : format(d[0], "yyyy")))
@@ -199,20 +199,20 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                 />
                 {/* X-Axis Hidden Rectangles*/}
                 {/* I did the X-Axis Shading last and just brought it up to the top so that it draws onto the svg first, so the line draws over the shading. SVG elements draw in the order they are shown, so these shaded boxes are drawn at the bottom, before the line or dotted axes. */}
-                {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
+                {/* {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
                     <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
                         transform = {`translate(${xScale(d[0])},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
                         className="fill-current" 
                         key={d} 
                     >
                         {
-                            <rect
-                                width={xScale(endOfMonth(d[0])) - xScale(d[0])}
-                                height={height - margin.bottom}
+                            <line
+                                y1={height -15}
+                                y2={0}
                                 className='highlightRectX'
                                 //className='text-green-800'
-                                fill='darkblue'
-                                fill-opacity='0'
+                                stroke='darkblue'
+                                stroke-opacity='0'
                                 onMouseOver={(e) => mouseover(e, d)}
                                 onMouseOut={(e) => mouseout(e)}
                                 // This color is good for the rectangles: #F0F4FF
@@ -220,38 +220,80 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             />
                         }
                     </ g>
-                ))}
+                ))} */}
                 {/* Y-Axis Hidden Rectangles */}
-                {data.map((d, i) => {
-                    let heightDifference;
-                    console.log("previousData[1] before: " + previousData[1])
-
-                    if (previousData < d[1]) {
-                        heightDifference = d[1] - previousData[1];
-                    } 
-                    if (previousData > d[1]) {
-                        heightDifference = previousData[1] - d[1];
-                    }
-
-                    previousData = d;
-                    console.log("d[1]: " + d[1])
-                    console.log("previousData[1] after: " + previousData[1])
-                    console.log("heightDifference: " + heightDifference);
-                    console.log("yScale: " + yScale(d[1]));
-                    return (
+                <g> {/* Parent <g> element to group the lines */}
+                    {data.map((d, i) => (
                         <g
-                            transform = {`translate(0,${yScale(d[1])})`} 
-                            className="" 
-                            key={i}
+                            transform={`translate(${xScale(d[0])},${yScale(d[1])})`}
+                            className="fill-current"
+                            key={d}
+                        >
+                            <line
+                                x1={width}
+                                x2={0}
+                                id='highlightRectY'
+                                stroke='darkblue'
+                                strokeOpacity='0' // Use camelCase for CSS properties like strokeOpacity instead of stroke-opacity
+                                onMouseOver={(e) => {
+                                    mouseover(e, d); // Call mouseover function with event and data point
+                                    // Additional logic to handle the other line's appearance
+                                    const otherLine = e.target.parentNode.nextSibling.querySelector('#highlightRectX');
+                                    otherLine.style.strokeOpacity = '1';
+                                }}
+                                onMouseOut={(e) => {
+                                    mouseout(e); // Call mouseout function with event
+                                    // Additional logic to handle the other line's disappearance
+                                    const otherLine = e.target.parentNode.nextSibling.querySelector('#highlightRectX');
+                                    otherLine.style.strokeOpacity = '0';
+                                }}
+                            />
+                            <line
+                                y1={height - 15}
+                                y2={0}
+                                id='highlightRectX'
+                                stroke='darkblue'
+                                strokeOpacity='0' // Use camelCase for CSS properties like strokeOpacity instead of stroke-opacity
+                                onMouseOver={(e) => {
+                                    mouseover(e, d); // Call mouseover function with event and data point
+                                    // Additional logic to handle the other line's appearance
+                                    const otherLine = e.target.parentNode.previousSibling.querySelector('#highlightRectY');
+                                    otherLine.style.strokeOpacity = '1';
+                                }}
+                                onMouseOut={(e) => {
+                                    mouseout(e); // Call mouseout function with event
+                                    // Additional logic to handle the other line's disappearance
+                                    const otherLine = e.target.parentNode.previousSibling.querySelector('#highlightRectY');
+                                    otherLine.style.strokeOpacity = '0';
+                                }}
+                            />
+                            <use
+                                href="#highlightRectX"
+                                transform="scale(-1, -1)"
+                            />
+                            <use
+                                href="#highlightRectY"
+                                transform="scale(-1, -1)"
+                            />
+                        </g>
+                    ))}
+                </g>
+
+                {/* {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
+                    <>
+                        <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
+                            transform = {`translate(0,${yScale(d[1])})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
+                            className="fill-current" 
+                            key={d} 
                         >
                             {
-                                <rect
-                                    width={width - margin.right - margin.left}
-                                    height={height - heightDifference}
-                                    className='highlightRectY'
+                                <line
+                                    x1={width}
+                                    x2={0}
+                                    className='highlightRectX'
                                     //className='text-green-800'
-                                    fill='black'
-                                    fill-opacity='0.5'
+                                    stroke='darkblue'
+                                    stroke-opacity='0'
                                     onMouseOver={(e) => mouseover(e, d)}
                                     onMouseOut={(e) => mouseout(e)}
                                     // This color is good for the rectangles: #F0F4FF
@@ -259,8 +301,28 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                                 />
                             }
                         </ g>
-                    );
-                })}
+                        <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
+                            transform = {`translate(${xScale(d[0])},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
+                            className="fill-current" 
+                            key={d} 
+                        >
+                            {
+                                <line
+                                    y1={height -15}
+                                    y2={0}
+                                    className='highlightRectX'
+                                    //className='text-green-800'
+                                    stroke='darkblue'
+                                    stroke-opacity='0'
+                                    onMouseOver={(e) => mouseover(e, d)}
+                                    onMouseOut={(e) => mouseout(e)}
+                                    // This color is good for the rectangles: #F0F4FF
+                                    // fillOpacity='8%'
+                                />
+                            }
+                        </ g>
+                    </>
+                ))} */}
                 {/* Circles */}
                 {data.map((d, i) => (
                     <motion.circle
