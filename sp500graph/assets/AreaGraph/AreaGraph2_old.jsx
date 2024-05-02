@@ -19,9 +19,6 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
     const [xPos, setXPos] = useState(0);
     const [yPos, setYPos] = useState(0);
     const [prevD, setPrevD] = useState([]);
-    const [tooltipVisible, setTooltipVisible] = useState(false);
-    const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-
 
     // const width= graphWidth + margin.left + margin.right;
     // const height= graphHeight + margin.top + margin.bottom;
@@ -80,89 +77,55 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
 
     let result = line(data); // Takes the data passed into the component via a prop, and passes it through the d3.line() function to create the drawing line for the d attribute in the <path> element that will be embedded in the <svg> element.
 
-    const handleMouseMove = (event) => {
-        const { clientX, clientY } = event;
-        const svgRect = event.target.getBoundingClientRect();
-        const mouseX = clientX - svgRect.left;
-        const mouseY = clientY - svgRect.top - margin.top;
-        
-        setXPos(mouseX);
-        setYPos(mouseY);
-
-        setTooltipPosition({ x: mouseX, y: mouseY});
-
-        // Find the nearest data point based on mouse position
-        let nearestDataPoint = null;
-        let minDistance = Infinity;
-        data.forEach((d) => {
-            const dist = Math.abs(xScale(d[0]) - mouseX);
-            if (dist < minDistance) {
-                minDistance = dist;
-                nearestDataPoint = d;
-            }
-        });
-
-        if (nearestDataPoint) {
-            // Snap the crosshairs to the nearest data point
-            setXPos(xScale(nearestDataPoint[0]));
-            setYPos(yScale(nearestDataPoint[1]));
-            setPrevD(nearestDataPoint); // Optional: Save the nearest data point for reference
-        }
-
-        // Show tooltip
-        setTooltipVisible(true);
-    };
-
-    const handleMouseLeave = () => {
-        // Hide tooltip
-        setTooltipVisible(false);
-    };
-
-    // const mouseover = (event, d) => {
-    //     setXPos(d[0])
-    //     setYPos(d[1])
-    //     //event.target.style['stroke-opacity'] = '1';
-    //     event.target.style['stroke-opacity'] = '1';
-    //     // console.log(format(xPos, 'MM/dd/yyyy'), yPos)
-    //     };
+    const mouseover = (event, d) => {
+        setXPos(d[0])
+        setYPos(d[1])
+        //event.target.style['stroke-opacity'] = '1';
+        event.target.style['stroke-opacity'] = '1';
+        // console.log(format(xPos, 'MM/dd/yyyy'), yPos)
+        };
   
-    //   const mouseout = (event) => {
-    //     //event.target.style['stroke-opacity'] = '0';
-    //     event.target.style['stroke-opacity'] = '0';
-    //   };
+      const mouseout = (event) => {
+        //event.target.style['stroke-opacity'] = '0';
+        event.target.style['stroke-opacity'] = '0';
+      };
 
     //data.map(d => console.log(years.findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? "" : format(d[0], "yyyy")))
 
     return (
         <>
-            <svg
-                className=""
-                viewBox={`0 0 ${width} ${height + 15}`}
-                onMouseMove={handleMouseMove}
-                onMouseLeave = {handleMouseLeave}
-            >
-
-                {/* X-Axis minor axis and tick labels */}
-                {years.map((year) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
+            <svg className="" viewBox={`0 0 ${width} ${height+15}`}>
+                {/* X-Axis Alternate Shading */}
+                {years.map((year, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
                     <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                        transform = {`translate(${xScale(year)},${height-margin.bottom})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
+                        transform = {`translate(${xScale(year)},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
                         className="fill-current" 
                         key={year}
                     >
                         <line
                             //key={`line-${index}`}
-                            y1={0}
-                            y2={margin.top-height + 10}
+                            y1={height -margin.bottom}
+                            y2={margin.top - height}
                             stroke='#718096'
                             strokeWidth={0.5}
                             strokeDasharray="2,4"
                         />
+                        {i % 2  === 1 && (
+                            <rect
+                                width={xScale(endOfYear(year)) - xScale(year)}
+                                height={height - margin.bottom}
+                                //className='text-green-800'
+                                fill='#F0F4FF'
+                                // This color is good for the rectangles: #F0F4FF
+                                // fillOpacity='8%'
+                            />
+                        )}
                         {!(year.getYear() === data.at(0)[0].getYear() || year.getYear() === data.at(-1)[0].getYear() || year.getYear().toString().endsWith('0')) && (
                         <text
                            //key={`text-${index}`}
                         //    alignmentBaseline="middle"
                             x={((xScale(endOfYear(year)) - xScale(year))/2)}
-                            y={10}
+                            y={height - 5}
                             textAnchor='middle'
                             style={{ fontSize: '10px', fill: '#718096' }}
                         >
@@ -170,27 +133,6 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         </text>
                         )}
                     </ g>
-                ))}
-
-                {/* X-Axis Shading */}
-                {years.map((year, i) => (
-                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                    transform = {`translate(${xScale(year)},${0})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                    className="fill-current" 
-                    key={year}
-                    >
-                        {i % 2  === 1 && (
-                            <rect
-                                width={xScale(endOfYear(year)) - xScale(year)}
-                                height={height-margin.bottom}
-                                //className='text-green-800'
-                                fill='#F0F4FF'
-                                // This color is good for the rectangles: #F0F4FF
-                                // fillOpacity='8%'
-                            />
-                        )}
-                    </ g>
-
                 ))}
                 {/* Y-axis */}
                 {yScale.ticks(5).map((points) => (
@@ -280,9 +222,63 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                     </ g>
                 ))} */}
                 {/* Y-Axis Hidden Rectangles */}
-                <g id="crosshairs" style={{ pointerEvents: 'none' }}>
-                    <line x1={margin.left} x2={width - margin.right} y1={yPos} y2={yPos} stroke="gray" strokeWidth="1" strokeDasharray="4" />
-                    <line x1={xPos} x2={xPos} y1={margin.top} y2={height - margin.bottom} stroke="gray" strokeWidth="1" strokeDasharray="4" />
+                <g> {/* Parent <g> element to group the lines */}
+                    {data.map((d, i) => (
+                        <g
+                            transform={`translate(${xScale(d[0])},${yScale(d[1])})`}
+                            className="fill-current"
+                            key={i}
+                        >
+                            <line
+                                x1={width}
+                                x2={0}
+                                id={`highlightRectY${i}`}
+                                stroke='darkblue'
+                                strokeOpacity='0' // Use camelCase for CSS properties like strokeOpacity instead of stroke-opacity
+                                onMouseOver={(e) => {
+                                    mouseover(e, d); // Call mouseover function with event and data point
+                                    // Additional logic to handle the other line's appearance
+                                    const otherLine = e.target.parentNode.nextSibling.querySelector(`#highlightRectX${i}`);
+                                    console.log('Other line Y:', otherLine)
+                                    otherLine.style.strokeOpacity = '1';
+                                }}
+                                onMouseOut={(e) => {
+                                    mouseout(e); // Call mouseout function with event
+                                    // Additional logic to handle the other line's disappearance
+                                    const otherLine = e.target.parentNode.nextSibling.querySelector(`#highlightRectX${i}`);
+                                    otherLine.style.strokeOpacity = '0';
+                                }}
+                            />
+                            <line
+                                y1={height - 15}
+                                y2={0}
+                                id={`highlightRectX${i}`}
+                                stroke='darkblue'
+                                strokeOpacity='0' // Use camelCase for CSS properties like strokeOpacity instead of stroke-opacity
+                                onMouseOver={(e) => {
+                                    mouseover(e, d); // Call mouseover function with event and data point
+                                    // Additional logic to handle the other line's appearance
+                                    const otherLine = e.target.parentNode.previousSibling.querySelector(`#highlightRectY${i}`);
+                                    console.log('Other line X:', otherLine)
+                                    otherLine.style.strokeOpacity = '1';
+                                }}
+                                onMouseOut={(e) => {
+                                    mouseout(e); // Call mouseout function with event
+                                    // Additional logic to handle the other line's disappearance
+                                    const otherLine = e.target.parentNode.previousSibling.querySelector(`#highlightRectY${i}`);
+                                    otherLine.style.strokeOpacity = '0';
+                                }}
+                            />
+                            <use
+                                href={`#highlightRectX${i}`}
+                                transform="scale(-1, -1)"
+                            />
+                            <use
+                                href={`#highlightRectY${i}`}
+                                transform="scale(-1, -1)"
+                            />
+                        </g>
+                    ))}
                 </g>
 
                 {/* {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
@@ -350,14 +346,9 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
       .on("mouseover", mouseover)
       .on("mouseout", mouseout); */}
             </svg>
-            {tooltipVisible && (
-                <div
-                    className="tooltip"
-                    style={{ top: yPos + margin.top, left: xPos + margin.left }}
-                >
-                    Date: {format(xScale.invert(xPos), 'MM/dd/yyyy')}, Value: {yScale.invert(yPos)}
-                </div>
-            )}
+            <div className="tooltip">
+                Date: {format(xPos, 'MM/dd/yyyy')}, Value: {yPos}
+            </div>
         </>
     );
 };
