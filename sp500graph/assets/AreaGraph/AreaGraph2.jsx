@@ -174,15 +174,46 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
 
                 {/* X-Axis Shading */}
                 {years.map((year, i) => (
+                    <g
+                        transform={`translate(${xScale(year)}, ${height-margin.bottom})`}
+                        className="fill-current"
+                        key={year}
+                    >
+                        {i % 2 === 1 && (
+                            <path
+                                d={`M 0 0 L ${xScale(endOfYear(year)) - xScale(year)} 0 L ${xScale(endOfYear(year)) - xScale(year)} ${margin.top - height + 10} L 0 ${margin.top - height + 10} Z`}
+                                fill="#F0F4FF"
+                            />
+                        )}
+                    </g>
+                ))}
+
+                {/* {years.map((year, i) => (
+                    <g
+                        transform={`translate(${xScale(year)}, ${height-margin.bottom})`}
+                        className="fill-current"
+                        key={year}
+                    >
+                        {i % 2 === 1 && (
+                            <rect
+                                width={xScale(endOfYear(year)) - xScale(year)}
+                                height={margin.top-height}
+                                fill="#F0F4FF"
+                            />
+                        )}
+                    </g>
+                ))} */}
+
+                {/* {years.map((year, i) => (
                     <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                    transform = {`translate(${xScale(year)},${0})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
+                    transform = {`translate(${xScale(year)},${14})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
                     className="fill-current" 
                     key={year}
                     >
                         {i % 2  === 1 && (
                             <rect
                                 width={xScale(endOfYear(year)) - xScale(year)}
-                                height={height-margin.bottom}
+                                height={height-margin.bottom-14}
                                 //className='text-green-800'
                                 fill='#F0F4FF'
                                 // This color is good for the rectangles: #F0F4FF
@@ -191,7 +222,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         )}
                     </ g>
 
-                ))}
+                ))} */}
                 {/* Y-axis */}
                 {yScale.ticks(5).map((points) => (
                     <g
@@ -279,7 +310,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         }
                     </ g>
                 ))} */}
-                {/* Y-Axis Hidden Rectangles */}
+                {/* Crosshairs */}
                 <g id="crosshairs" style={{ pointerEvents: 'none' }}>
                     <line x1={margin.left} x2={width - margin.right} y1={yPos} y2={yPos} stroke="gray" strokeWidth="1" strokeDasharray="4" />
                     <line x1={xPos} x2={xPos} y1={margin.top} y2={height - margin.bottom} stroke="gray" strokeWidth="1" strokeDasharray="4" />
