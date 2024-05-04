@@ -165,6 +165,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             y={10}
                             textAnchor='middle'
                             style={{ fontSize: '10px', fill: '#718096' }}
+                            //className="text-xs text-blue-800"
                         >
                             {format(year, "yy")}
                         </text>

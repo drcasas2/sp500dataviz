@@ -11,6 +11,6 @@ export default defineConfig({
     react(),
     reactRefresh(),
     tailwindcss(),
-    //autoprefixer(),
+    autoprefixer(),
   ],
 });
