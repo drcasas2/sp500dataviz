@@ -174,6 +174,23 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
 
                 {/* X-Axis Shading */}
                 {years.map((year, i) => (
+                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
+                    transform = {`translate(${xScale(year)},${14})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
+                    className="fill-current" 
+                    key={year}
+                    >
+                        {i % 2  === 1 && (
+                            <rect
+                                width={xScale(endOfYear(year)) - xScale(year)}
+                                height={height-margin.bottom-14}
+                                //className='text-green-800'
+                                fill='#F0F4FF' // This color is good for the rectangles: #F0F4FF
+                                pointerEvents="none" // Added this line to disable pointer events for the shaded area. This allows the crosshair to work even in the drawn rectangle areas
+                            />
+                        )}
+                    </ g>
+                ))}
+                {/* {years.map((year, i) => (
                     <g
                         transform={`translate(${xScale(year)}, ${height-margin.bottom})`}
                         className="fill-current"
@@ -183,10 +200,11 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             <path
                                 d={`M 0 0 L ${xScale(endOfYear(year)) - xScale(year)} 0 L ${xScale(endOfYear(year)) - xScale(year)} ${margin.top - height + 10} L 0 ${margin.top - height + 10} Z`}
                                 fill="#F0F4FF"
+                                pointerEvents="none" // Added this line to disable pointer events for the shaded area. This allows the crosshair to work even in the drawn rectangle areas
                             />
                         )}
                     </g>
-                ))}
+                ))} */}
 
                 {/* {years.map((year, i) => (
                     <g
@@ -202,26 +220,6 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             />
                         )}
                     </g>
-                ))} */}
-
-                {/* {years.map((year, i) => (
-                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                    transform = {`translate(${xScale(year)},${14})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                    className="fill-current" 
-                    key={year}
-                    >
-                        {i % 2  === 1 && (
-                            <rect
-                                width={xScale(endOfYear(year)) - xScale(year)}
-                                height={height-margin.bottom-14}
-                                //className='text-green-800'
-                                fill='#F0F4FF'
-                                // This color is good for the rectangles: #F0F4FF
-                                // fillOpacity='8%'
-                            />
-                        )}
-                    </ g>
-
                 ))} */}
                 {/* Y-axis */}
                 {yScale.ticks(5).map((points) => (
