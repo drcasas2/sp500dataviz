@@ -20,39 +20,424 @@ const dailyInterval = '1day';
 
 const API = {
 
-    sectorWeightings: [
+    yearlySectorWeights: [
         {
-            Year: 1990,
+            Year: 2023,
             Sector: {
-                Financials: 7.5,
-                Technology: 6.3,
-                Healthcare: 10.4,
-                Industrials: 13.6,
-                "Cons Disc": 12.8,
-                Energy: 13.4,
-                "Cons Stap": 14.0,
-                Utilities: 6.2,
-                Telecom: 8.7,
-                Materials: 7.2
+                "Communication Services": 9,
+                "Consumer Discretionary": 11,
+                "Consumer Staples": 7,
+                Energy: 4,
+                Financials: 13,
+                "Health Care": 13,
+                Industrials: 8,
+                "Information Technology": 27,
+                Materials: 2,
+                "Real Estate": 2,
+                Utilities: 2
             }
         },
         {
-            Year: 1991,
+            Year: 2022,
             Sector: {
-                Financials: 0, // Fill in the actual values here
-                Technology: 0,
-                Healthcare: 0,
-                Industrials: 0,
-                "Cons Disc": 0,
-                Energy: 0,
-                "Cons Stap": 0,
-                Utilities: 0,
-                Telecom: 0,
-                Materials: 0
+                "Communication Services": 8,
+                "Consumer Discretionary": 9,
+                "Consumer Staples": 8,
+                Energy: 5,
+                Financials: 14,
+                "Health Care": 15,
+                Industrials: 9,
+                "Information Technology": 23,
+                Materials: 3,
+                "Real Estate": 3,
+                Utilities: 3
             }
         },
-        // Add more objects for other years if needed
+        {
+            Year: 2021,
+            Sector: {
+                "Communication Services": 15,
+                "Consumer Discretionary": 13,
+                "Consumer Staples": 6,
+                Energy: 3,
+                Financials: 11,
+                "Health Care": 13,
+                Industrials: 7,
+                "Information Technology": 25,
+                Materials: 2,
+                "Real Estate": 3,
+                Utilities: 2
+            }
+        },
+        {
+            Year: 2020,
+            Sector: {
+                "Communication Services": 14,
+                "Consumer Discretionary": 13,
+                "Consumer Staples": 7,
+                Energy: 2,
+                Financials: 10,
+                "Health Care": 12,
+                Industrials: 8,
+                "Information Technology": 26,
+                Materials: 2,
+                "Real Estate": 2,
+                Utilities: 2
+            }
+        },
+        {
+            Year: 2019,
+            Sector: {
+                "Communication Services": 14,
+                "Consumer Discretionary": 10,
+                "Consumer Staples": 8,
+                Energy: 4,
+                Financials: 13,
+                "Health Care": 13,
+                Industrials: 8,
+                "Information Technology": 23,
+                Materials: 2,
+                "Real Estate": 3,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2018,
+            Sector: {
+                "Communication Services": 13,
+                "Consumer Discretionary": 10,
+                "Consumer Staples": 8,
+                Energy: 4,
+                Financials: 13,
+                "Health Care": 14,
+                Industrials: 8,
+                "Information Technology": 22,
+                Materials: 2,
+                "Real Estate": 3,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2017,
+            Sector: {
+                "Communication Services": 13,
+                "Consumer Discretionary": 10,
+                "Consumer Staples": 9,
+                Energy: 5,
+                Financials: 15,
+                "Health Care": 12,
+                Industrials: 9,
+                "Information Technology": 19,
+                Materials: 2,
+                "Real Estate": 3,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2016,
+            Sector: {
+                "Communication Services": 13,
+                "Consumer Discretionary": 9,
+                "Consumer Staples": 10,
+                Energy: 6,
+                Financials: 15,
+                "Health Care": 12,
+                Industrials: 10,
+                "Information Technology": 17,
+                Materials: 2,
+                "Real Estate": 3,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2015,
+            Sector: {
+                "Communication Services": 13,
+                "Consumer Discretionary": 10,
+                "Consumer Staples": 10,
+                Energy: 6,
+                Financials: 14,
+                "Health Care": 14,
+                Industrials: 9,
+                "Information Technology": 16,
+                Materials: 2,
+                "Real Estate": 3,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2014,
+            Sector: {
+                "Communication Services": 10,
+                "Consumer Discretionary": 9,
+                "Consumer Staples": 10,
+                Energy: 7,
+                Financials: 16,
+                "Health Care": 14,
+                Industrials: 10,
+                "Information Technology": 16,
+                Materials: 2,
+                "Real Estate": 3,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2013,
+            Sector: {
+                "Communication Services": 38,
+                "Consumer Discretionary": 6,
+                "Consumer Staples": 7,
+                Energy: 6,
+                Financials: 11,
+                "Health Care": 9,
+                Industrials: 7,
+                "Information Technology": 11,
+                Materials: 2,
+                "Real Estate": 2,
+                Utilities: 2
+            }
+        },
+        {
+            Year: 2012,
+            Sector: {
+                "Communication Services": 33,
+                "Consumer Discretionary": 6,
+                "Consumer Staples": 8,
+                Energy: 7,
+                Financials: 11,
+                "Health Care": 8,
+                Industrials: 7,
+                "Information Technology": 14,
+                Materials: 2,
+                "Real Estate": 2,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2011,
+            Sector: {
+                "Communication Services": 33,
+                "Consumer Discretionary": 6,
+                "Consumer Staples": 9,
+                Energy: 7,
+                Financials: 10,
+                "Health Care": 8,
+                Industrials: 7,
+                "Information Technology": 13,
+                Materials: 2,
+                "Real Estate": 2,
+                Utilities: 2
+            }
+        },
+        {
+            Year: 2010,
+            Sector: {
+                "Communication Services": 32,
+                "Consumer Discretionary": 6,
+                "Consumer Staples": 8,
+                Energy: 7,
+                Financials: 12,
+                "Health Care": 9,
+                Industrials: 8,
+                "Information Technology": 12,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 2
+            }
+        },
+        {
+            Year: 2009,
+            Sector: {
+                "Communication Services": 35,
+                "Consumer Discretionary": 5,
+                "Consumer Staples": 8,
+                Energy: 7,
+                Financials: 12,
+                "Health Care": 9,
+                Industrials: 7,
+                "Information Technology": 13,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 2
+            }
+        },
+        {
+            Year: 2008,
+            Sector: {
+                "Communication Services": 26,
+                "Consumer Discretionary": 4,
+                "Consumer Staples": 10,
+                Energy: 9,
+                Financials: 12,
+                "Health Care": 10,
+                Industrials: 8,
+                "Information Technology": 13,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2007,
+            Sector: {
+                "Communication Services": 34,
+                "Consumer Discretionary": 4,
+                "Consumer Staples": 7,
+                Energy: 8,
+                Financials: 13,
+                "Health Care": 9,
+                Industrials: 8,
+                "Information Technology": 10,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2006,
+            Sector: {
+                "Communication Services": 27,
+                "Consumer Discretionary": 5,
+                "Consumer Staples": 8,
+                Energy: 8,
+                Financials: 17,
+                "Health Care": 9,
+                Industrials: 9,
+                "Information Technology": 11,
+                Materials: 2,
+                "Real Estate": 2,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2005,
+            Sector: {
+                "Communication Services": 26,
+                "Consumer Discretionary": 5,
+                "Consumer Staples": 8,
+                Energy: 8,
+                Financials: 17,
+                "Health Care": 10,
+                Industrials: 10,
+                "Information Technology": 11,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2004,
+            Sector: {
+                "Communication Services": 16,
+                "Consumer Discretionary": 7,
+                "Consumer Staples": 10,
+                Energy: 7,
+                Financials: 19,
+                "Health Care": 12,
+                Industrials: 11,
+                "Information Technology": 13,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2003,
+            Sector: {
+                "Communication Services": 5,
+                "Consumer Discretionary": 6,
+                "Consumer Staples": 12,
+                Energy: 7,
+                Financials: 20,
+                "Health Care": 15,
+                Industrials: 12,
+                "Information Technology": 17,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2002,
+            Sector: {
+                "Communication Services": 5,
+                "Consumer Discretionary": 5,
+                "Consumer Staples": 13,
+                Energy: 7,
+                Financials: 20,
+                "Health Care": 15,
+                Industrials: 12,
+                "Information Technology": 16,
+                Materials: 2,
+                "Real Estate": 1,
+                Utilities: 3
+            }
+        },
+        {
+            Year: 2001, // This data is inaccurate
+            Sector: {
+                "Communication Services": 5,
+                "Consumer Discretionary": 13.1,
+                "Consumer Staples": 8.2,
+                Energy: 7,
+                Financials: 17.8,
+                "Health Care": 14.4,
+                Industrials: 11.3,
+                "Information Technology": 17.6,
+                Materials: 2.6,
+                "Real Estate": 1,
+                Utilities: 3.1
+            }
+        }
     ],
+
+    // sectorWeightings: [
+    //     {
+    //         Year: 1990,
+    //         Sector: {
+    //             Financials: 7.5,
+    //             Technology: 6.3,
+    //             Healthcare: 10.4,
+    //             Industrials: 13.6,
+    //             "Cons Disc": 12.8,
+    //             Energy: 13.4,
+    //             "Cons Stap": 14.0,
+    //             Utilities: 6.2,
+    //             Telecom: 8.7,
+    //             Materials: 7.2
+    //         }
+    //     },
+    //     {
+    //         Year: 1991,
+    //         Sector: {
+    //             Financials: 8.7, // Fill in the actual values here
+    //             Technology: 5.3,
+    //             Healthcare: 12.4,
+    //             Industrials: 13.2,
+    //             "Consumer Discretionary": 14.0,
+    //             Energy: 10.6,
+    //             "Consumer Staples": 15.2,
+    //             Utilities: 5.8,
+    //             Telecom: 8.0,
+    //             Materials: 6.8
+    //         }
+    //     },
+    //     {
+    //         Year: 1992,
+    //         Sector: {
+    //             Financials: 10.6, // Fill in the actual values here
+    //             Technology: 5.3,
+    //             Healthcare: 12.4,
+    //             Industrials: 13.2,
+    //             "Consumer Discretionary": 14.0,
+    //             Energy: 10.6,
+    //             "Consumer Staples": 15.2,
+    //             Utilities: 5.8,
+    //             Telecom: 8.0,
+    //             Materials: 6.8
+    //         }
+    //     },
+    // ],
     fetchMonthlyData: async () => {
         const options = {
             method: 'GET',

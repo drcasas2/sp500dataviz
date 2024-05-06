@@ -9,6 +9,7 @@ import viteLogo from '/vite.svg'
 import * as d3 from 'd3';
 import AreaGraph from '../assets/AreaGraph/AreaGraph.jsx'
 import AreaGraph2 from '../assets/AreaGraph/AreaGraph2.jsx'
+import PieChart from '../assets/PieChart/PieChart.jsx'
 import API from '../utils/API.jsx';
 import { motion } from "framer-motion";
 
@@ -39,6 +40,7 @@ function App() {
   const [dates, setDates] = useState([]);
   const [values, setValues] = useState([]);
   const [data, setData] = useState([]);
+  const [yearlySectorWeights, setYearlySectorWeights] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchMonthlyData = async () => {
@@ -50,10 +52,18 @@ function App() {
     setLoading(false);
     };
 
+  const fetchYearlySectorWeights = async () => {
+    const fetchedData = await API.yearlySectorWeights;
+    const sortedData = fetchedData.reverse();
+    setYearlySectorWeights(sortedData);
+    setLoading(false);
+  }
+
   //const fetch
 
   useEffect(() => {
       fetchMonthlyData();
+      fetchYearlySectorWeights();
   }, []);
 
   return (
@@ -72,10 +82,12 @@ function App() {
         { loading ? (
             <h1 className="w-full text-2xl text-center items-center justify-center">Loading...</h1>
             ) : (
-              bounds.width > 0 &&
-          <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
-          //<PieChart height={bounds.height} width={bounds.width) }
-        )}
+              bounds.width > 0 &&(
+            <>
+              <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+              <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} />
+            </>
+        ))}
       </div>
     </>
   )
