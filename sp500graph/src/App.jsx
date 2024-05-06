@@ -50,6 +50,8 @@ function App() {
     setLoading(false);
     };
 
+  //const fetch
+
   useEffect(() => {
       fetchMonthlyData();
   }, []);
@@ -72,6 +74,7 @@ function App() {
             ) : (
               bounds.width > 0 &&
           <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+          //<PieChart height={bounds.height} width={bounds.width) }
         )}
       </div>
     </>

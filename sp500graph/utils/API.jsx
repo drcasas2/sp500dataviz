@@ -19,6 +19,40 @@ const dailyInterval = '1day';
 //const apiUrl = `https://api.iex.cloud/v1/query?function=${monthlyData}&symbol=${stockTicker}&apikey=${apiKey}`;
 
 const API = {
+
+    sectorWeightings: [
+        {
+            Year: 1990,
+            Sector: {
+                Financials: 7.5,
+                Technology: 6.3,
+                Healthcare: 10.4,
+                Industrials: 13.6,
+                "Cons Disc": 12.8,
+                Energy: 13.4,
+                "Cons Stap": 14.0,
+                Utilities: 6.2,
+                Telecom: 8.7,
+                Materials: 7.2
+            }
+        },
+        {
+            Year: 1991,
+            Sector: {
+                Financials: 0, // Fill in the actual values here
+                Technology: 0,
+                Healthcare: 0,
+                Industrials: 0,
+                "Cons Disc": 0,
+                Energy: 0,
+                "Cons Stap": 0,
+                Utilities: 0,
+                Telecom: 0,
+                Materials: 0
+            }
+        },
+        // Add more objects for other years if needed
+    ],
     fetchMonthlyData: async () => {
         const options = {
             method: 'GET',
