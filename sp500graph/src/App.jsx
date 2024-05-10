@@ -42,6 +42,7 @@ function App() {
   const [data, setData] = useState([]);
   const [yearlySectorWeights, setYearlySectorWeights] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [year, setYear] = useState(2023);
 
   const fetchMonthlyData = async () => {
     const fetchedData = await API.fetchMonthlyData();
@@ -85,7 +86,11 @@ function App() {
               bounds.width > 0 &&(
             <>
               <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
-              <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} />
+                <form>
+                  <label htmlFor= "year">Year:</label>
+                  <input type = "number" value= {year} onChange={e => setYear(e.target.value)} />
+                </form>
+              <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year}/>
             </>
         ))}
       </div>
