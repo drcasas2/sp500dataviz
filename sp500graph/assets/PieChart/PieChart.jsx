@@ -15,7 +15,7 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
 
     const findYearData = yearlySectorWeights.find(entry => entry.Year === year);
    //console.log(yearData);
-    const yearData = Object.entries(findYearData.Sector).map(([Sector, Value]) => ({ Sector, Value }))
+    const yearData = Object.entries(findYearData.Sector).map(([Sector, Value]) => ({ Sector, Value })) //Takes each sector value in the Sector Object, and creates an array of its own Sector, Value objects
     console.log(yearData);
     //const sectorLength = yearData.map(entry => Object.keys(entry.Sector).length);
     //console.log(sectorLength[0]);
