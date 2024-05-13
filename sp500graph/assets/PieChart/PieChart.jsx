@@ -6,77 +6,71 @@ import { format, startOfYear, startOfMonth, startOfQuarter, endOfYear, endOfMont
 import { motion } from "framer-motion";
 
 const PieChart = ({ height, width, yearlySectorWeights, year }) => {
+
+    const margin = { top: '300px', right: '1000px', bottom: '15px', left: '35px' }
+
+    const [data] = useState(yearlySectorWeights);
+
     const svgRef = useRef();
 
-    const svg = d3.select(svgRef.current)
-
-    console.log(year);
+    const findYearData = yearlySectorWeights.find(entry => entry.Year === year);
+   //console.log(yearData);
+    const yearData = Object.entries(findYearData.Sector).map(([Sector, Value]) => ({ Sector, Value }))
+    console.log(yearData);
+    //const sectorLength = yearData.map(entry => Object.keys(entry.Sector).length);
+    //console.log(sectorLength[0]);
 
     useEffect(() => {
+        //set up svg container
+        const w = width;
+        const h = height;
+        const radius = w/2;
+        const svg = d3.select(svgRef.current)
+            .attr('width', w)
+            .attr('height', h)
+            .style('overflow', 'visible')
+            .style('margin-top', margin.top);
+        //set up chart
 
-        // Filter data for the year 2001
-        const yearData = yearlySectorWeights.find(entry => entry.Year === year);
-        if (yearData) {
-            const pie = d3.pie().sort(null).value(d => d.value);
-            const arc = d3.arc().innerRadius(0).outerRadius(Math.min(width, height) / 2);
-      
-            const arcs = pie(Object.entries(yearData.Sector).map(([sector, value]) => ({ sector, value })));
+        //console.log(yearData.map(d => Object.values(d.Sector)))
+        //The below line of code invokes the pie method in d3, then tells d3 how to extract
+        //the values you want to use in the pie chart by grabbing the values in the object's
+        //embedded Sector object, and then (yearData) tells d3 what data you want to use
+        //to perform the operation
+        const pie = d3.pie().value(d => d.Value);
+        console.log(pie);
+        const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
+        const arcs = pie(yearData);
+        const color = d3.scaleOrdinal().range(d3.schemePaired);
+        //set up svg data
+        svg.selectAll()
+            .data(arcs)
+            .join('path')
+                .attr('d', arcGenerator)
+                .attr('fill', (d,i) => {
+                    console.log("Object.values(d.data.Sector): ", Object.values(d.data.Sector));
+                    color(d.Sector);
+                })
+                .style('opacity', 0.7);
+        //set up annotation
+        svg.selectAll()
+            .data(arcs)
+            .join('text')
+                .text(d => d.data.Sector)
+                .attr('transform', d => `translate(${arcGenerator.centroid(d)})`)
+                .style('text-anchor', 'middle');
+    }, [data,year]);
 
-            svg.selectAll("*").remove(); // Clear previous drawings
-      
-            const arcGroup = svg
-                .append("g")
-                .attr("transform", `translate(${width / 2}, ${height / 2})`)
-            
-            arcGroup
-                .selectAll("path")
-                .data(arcs)
-                .enter()
-                .append("path")
-                .attr("fill", (d, i) => d3.schemeCategory10[i])
-                .attr("d", arc)
-                .append("title")
-                .text(d => `${d.data.sector}: ${d.data.value}%`);
-
-            // Add labels
-            arcGroup
-                .selectAll("text")
-                .data(arcs)
-                .enter()
-                .append("text")
-                .attr("transform", d => `translate(${arc.centroid(d)})`)
-                .attr("dy", "0.35em")
-                .attr("text-anchor", "middle")
-                .text(d => `${d.data.sector}: ${d.data.value}%`);
-        //const sectorsData = Object.entries(yearData.Sector);
-
-        // Create a pie layout
-        //const pie = d3.pie().value(d => d[1]);
-
-        // Generate pie angles
-        //const angles = pie(sectorsData);
-
-            // const pie = d3.pie()
-            //     .sort(null)
-            //     .value(yearlySectorWeights => yearlySectorWeights["Sector"]["Information Technology"])
-
-            // const angles = pie(yearlySectorWeights)
-
-            // console.log(angles)
-
-        }
-    },
-        [year, yearlySectorWeights, height, width]
-    )
 
     console.log(yearlySectorWeights);
 
-return (
+    return (
     <>
         <svg
             className="pieChart"
             ref = {svgRef}
             viewBox={`0 0 ${width} ${height + 15}`}
+            style={{ display: 'block', margin: 'auto' }}
             // onMouseMove={handleMouseMove}
             // onMouseLeave = {handleMouseLeave}
         >

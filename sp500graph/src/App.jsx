@@ -42,7 +42,7 @@ function App() {
   const [data, setData] = useState([]);
   const [yearlySectorWeights, setYearlySectorWeights] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [year, setYear] = useState(2023);
+  const [year, setYear] = useState(2021);
 
   const fetchMonthlyData = async () => {
     const fetchedData = await API.fetchMonthlyData();
