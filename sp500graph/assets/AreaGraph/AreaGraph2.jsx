@@ -164,8 +164,8 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             x={((xScale(endOfYear(year)) - xScale(year))/2)}
                             y={10}
                             textAnchor='middle'
-                            style={{ fontSize: '10px', fill: '#718096' }}
-                            //className="text-xs text-blue-800"
+                            //style={{ fontSize: '10px', fill: '#718096' }}
+                            className="text-xs text-blue-600"
                         >
                             {format(year, "yy")}
                         </text>
@@ -252,7 +252,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                 {xScale.ticks(4).concat(startOfYear(data.at(0)[0])).concat(startOfYear(data.at(-1)[0])).map((date) => (
                     <g
                         transform = {`translate(${xScale(date)},${height - 5})`} 
-                        className="text-gray-400" 
+                        className="fill-current" 
                         key={date}
                     >
                         <line
@@ -269,7 +269,8 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             x={-6}
                             y={1}
                             transform={`rotate(50 ${0},${0})`}
-                            style={{ fontSize: '12px', fill: '#718096' }}
+                            //style={{ fontSize: '12px', fill: '#718096' }}
+                            className = 'text-sm text-blue-800'
                         >
                             {/* xScale(endOfYear(year)) - xScale(year) */}
                             {format(date, "yyyy")}
