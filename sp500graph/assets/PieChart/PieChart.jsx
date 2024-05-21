@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const PieChart = ({ height, width, yearlySectorWeights, year }) => {
 
-    const margin = { top: '300px', right: '1000px', bottom: '15px', left: '35px' }
+    const margin = { top: 20, right: 20, bottom: 20, left: 20 }
 
     const [data] = useState(yearlySectorWeights);
 
@@ -24,12 +24,19 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
         //set up svg container
         const w = width;
         const h = height;
-        const radius = w/2;
+        const radius = Math.min(w, h) / 2;
         const svg = d3.select(svgRef.current)
-            .attr('width', w)
-            .attr('height', h)
-            .style('overflow', 'visible')
-            .style('margin-top', margin.top);
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('viewBox', `0 0 ${w + margin.left + margin.right} ${h + margin.top + margin.bottom}`)
+            .style('overflow', 'hidden')
+            .style('margin-top', margin.top)
+            .style('margin-left', 'auto')
+            .style('margin-right', 'auto')
+            .style("margin-bottom", margin.bottom);
+            //.style('margin', 'auto');
+
+            svg.selectAll("*").remove();
         //set up chart
 
         //console.log(yearData.map(d => Object.values(d.Sector)))
@@ -43,23 +50,28 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
         const arcs = pie(yearData);
         const color = d3.scaleOrdinal().range(d3.schemePaired);
         //set up svg data
-        svg.selectAll()
+        
+        const arcGroup = svg
+            .append("g")
+            .attr("transform", `translate(${(w + margin.left + margin.right)/2}, ${(h + margin.top + margin.bottom)/2})`);
+
+        arcGroup
+            .selectAll("path")
             .data(arcs)
             .join('path')
-                .attr('d', arcGenerator)
-                .attr('fill', (d,i) => {
-                    console.log("Object.values(d.data.Sector): ", Object.values(d.data.Sector));
-                    color(d.Sector);
-                })
-                .style('opacity', 0.7);
+            .attr('d', arcGenerator)
+            .attr('fill', (d,i) => color(i))
+            .style('opacity', 0.7);
+
         //set up annotation
-        svg.selectAll()
+        arcGroup
+            .selectAll("text")
             .data(arcs)
             .join('text')
-                .text(d => d.data.Sector)
-                .attr('transform', d => `translate(${arcGenerator.centroid(d)})`)
-                .style('text-anchor', 'middle');
-    }, [data,year]);
+            .text(d => `${d.data.Sector}: ${d.data.Value}%`)
+            .attr('transform', d => `translate(${arcGenerator.centroid(d)})`)
+            .style('text-anchor', 'middle');
+    }, [data,year, width, height]);
 
 
     console.log(yearlySectorWeights);
@@ -69,8 +81,8 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
         <svg
             className="pieChart"
             ref = {svgRef}
-            viewBox={`0 0 ${width} ${height + 15}`}
-            style={{ display: 'block', margin: 'auto' }}
+            // viewBox={`0 0 ${width} ${height}`}
+            style={{ display: 'block', margin: '0 auto' }}
             // onMouseMove={handleMouseMove}
             // onMouseLeave = {handleMouseLeave}
         >
