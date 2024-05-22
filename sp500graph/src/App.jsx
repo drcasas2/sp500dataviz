@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react'
 //import useMeasure from "react-use-measure";
 import { useMeasure } from "@uidotdev/usehooks";
 import { parseISO } from "date-fns";
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { format, startOfYear, startOfMonth, startOfQuarter, endOfYear, endOfMonth, endOfQuarter, eachYearOfInterval, eachMonthOfInterval, eachQuarterOfInterval, isSameYear, isSameMonth, isSameQuarter } from "date-fns";
 //import styles from './App.module.css';
 //import './index.css';
 import * as d3 from 'd3';
@@ -42,7 +41,7 @@ function App() {
   const [data, setData] = useState([]);
   const [yearlySectorWeights, setYearlySectorWeights] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [year, setYear] = useState(2022);
+  const [year, setYear] = useState();
 
   const fetchMonthlyData = async () => {
     const fetchedData = await API.fetchMonthlyData();
@@ -60,12 +59,20 @@ function App() {
     setLoading(false);
   }
 
+  // endOfYear(data.at(-1)[0])
+
   //const fetch
 
   useEffect(() => {
       fetchMonthlyData();
       fetchYearlySectorWeights();
   }, []);
+
+  useEffect(() => {
+    if (yearlySectorWeights.length > 0) {
+      setYear(yearlySectorWeights[yearlySectorWeights.length - 1].Year);
+    }
+  }, [yearlySectorWeights]);
 
   return (
     <>
@@ -88,7 +95,7 @@ function App() {
               <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
                 <form>
                   <label htmlFor= "year">Year:</label>
-                  <input type = "number" value= {year} onChange={e => setYear(Number(e.target.value))} />
+                  <input type = "number" value= {year || ''} onChange={e => setYear(Number(e.target.value))} />
                 </form>
               <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
             </>

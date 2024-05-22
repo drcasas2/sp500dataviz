@@ -14,13 +14,20 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
     const svgRef = useRef();
 
     const findYearData = yearlySectorWeights.find(entry => entry.Year === year);
-   //console.log(yearData);
-    const yearData = Object.entries(findYearData.Sector).map(([Sector, Value]) => ({ Sector, Value })) //Takes each sector value in the Sector Object, and creates an array of its own Sector, Value objects
-    console.log(yearData);
+   console.log(findYearData);
+
+   let yearData = [];
+
+   if (findYearData) {
+        yearData = Object.entries(findYearData.Sector).map(([Sector, Value]) => ({ Sector, Value }));
+   } //Takes each sector value in the Sector Object, and creates an array of its own Sector, Value objects
+    
+   console.log(yearData);
     //const sectorLength = yearData.map(entry => Object.keys(entry.Sector).length);
     //console.log(sectorLength[0]);
 
     useEffect(() => {
+        if (!findYearData) return;
         //set up svg container
         const w = width;
         const h = height;
@@ -79,17 +86,21 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
 
     return (
     <>
-        <svg
-            className="pieChart"
-            ref = {svgRef}
-            // viewBox={`0 0 ${width} ${height}`}
-            style={{ display: 'block', margin: '0 auto' }}
-            // onMouseMove={handleMouseMove}
-            // onMouseLeave = {handleMouseLeave}
-        >
-        </ svg>
+        {findYearData ? (
+            <svg
+                className="pieChart"
+                ref = {svgRef}
+                // viewBox={`0 0 ${width} ${height}`}
+                style={{ display: 'block', margin: '0 auto' }}
+                // onMouseMove={handleMouseMove}
+                // onMouseLeave = {handleMouseLeave}
+            >
+            </ svg>
+            ) : (
+                <h1>No Sector Data Found for that Year...</h1>
+            )}
     </>
-);
+    );
 };
 
 export default PieChart;
