@@ -76,7 +76,7 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
             .data(arcs)
             .join('text')
             .text(d => `${d.data.Sector}: ${d.data.Value}%`)
-            .attr('transform', d => `translate(${arcGenerator.centroid(d)})`)
+            .attr('transform', d => `translate(${arcGenerator.centroid(d)}), rotate(40 ${0},${0})`)
             .style('text-anchor', 'middle')
             .attr('class', 'text-xs');
     }, [data,year, width, height]);

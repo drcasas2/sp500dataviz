@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/core/styles.css';
+import { SliderInput } from '../assets/SliderInput/SliderInput.jsx'; // Adjust the import path as needed
 
 import { MantineProvider } from '@mantine/core';
 
@@ -99,10 +100,18 @@ export default function App() {
                 bounds.width > 0 &&(
               <>
                 <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
-                  <form>
-                    <label htmlFor= "year">Year:</label>
-                    <input type = "number" value= {year || ''} onChange={e => setYear(Number(e.target.value))} />
-                  </form>
+                <motion.div
+                  className="box"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.8,
+                    ease: [0, 0.71, 0.2, 1.01]
+                  }}
+                >
+                  <SliderInput value={year} onChange={setYear} />
+                </ motion.div>
                 <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
               </>
           ))}
