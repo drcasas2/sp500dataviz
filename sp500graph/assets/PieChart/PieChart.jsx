@@ -87,15 +87,26 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
     return (
     <>
         {findYearData ? (
-            <svg
-                className="pieChart"
-                ref = {svgRef}
-                // viewBox={`0 0 ${width} ${height}`}
-                style={{ display: 'block', margin: '0 auto' }}
-                // onMouseMove={handleMouseMove}
-                // onMouseLeave = {handleMouseLeave}
+            <motion.div
+            className="box"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.8,
+              ease: [0, 0.71, 0.2, 1.01]
+            }}
             >
-            </ svg>
+                <svg
+                    className="pieChart"
+                    ref = {svgRef}
+                    // viewBox={`0 0 ${width} ${height}`}
+                    style={{ display: 'block', margin: '0 auto' }}
+                    // onMouseMove={handleMouseMove}
+                    // onMouseLeave = {handleMouseLeave}
+                >
+                </ svg>
+            </ motion.div>
             ) : (
                 <h1>No Sector Data Found for that Year...</h1>
             )}

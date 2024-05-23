@@ -11,8 +11,13 @@ import AreaGraph2 from '../assets/AreaGraph/AreaGraph2.jsx'
 import PieChart from '../assets/PieChart/PieChart.jsx'
 import API from '../utils/API.jsx';
 import { motion } from "framer-motion";
+// Import styles of packages that you've installed.
+// All packages except `@mantine/hooks` require styles imports
+import '@mantine/core/styles.css';
 
-function App() {
+import { MantineProvider } from '@mantine/core';
+
+export default function App() {
   // const [count, setCount] = useState(0)
 
   // const revenueData = [
@@ -75,34 +80,34 @@ function App() {
   }, [yearlySectorWeights]);
 
   return (
-    <>
-      <motion.h1
-      className='text-center text-2xl font-extrabold font-sans text-blue-500'
-      initial = {{ opacity: 0}}
-      animate = {{ opacity: 1 }}
-      transition = {{ duration: 4, delay: 0.5, type: "spring" }}
-      >
-        S&P 500 Data (1993 - 2024)
-        </motion.h1>
-      <div
-        className = "my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}
-      >
-        { loading ? (
-            <h1 className="w-full text-2xl text-center items-center justify-center">Loading...</h1>
-            ) : (
-              bounds.width > 0 &&(
-            <>
-              <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
-                <form>
-                  <label htmlFor= "year">Year:</label>
-                  <input type = "number" value= {year || ''} onChange={e => setYear(Number(e.target.value))} />
-                </form>
-              <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
-            </>
-        ))}
-      </div>
-    </>
+    <MantineProvider>  
+      <>
+        <motion.h1
+        className='text-center text-2xl font-extrabold font-sans text-blue-500'
+        initial = {{ opacity: 0}}
+        animate = {{ opacity: 1 }}
+        transition = {{ duration: 4, delay: 0.5, type: "spring" }}
+        >
+          S&P 500 Data (1993 - 2024)
+          </motion.h1>
+        <div
+          className = "my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}
+        >
+          { loading ? (
+              <h1 className="w-full text-2xl text-center items-center justify-center">Loading...</h1>
+              ) : (
+                bounds.width > 0 &&(
+              <>
+                <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+                  <form>
+                    <label htmlFor= "year">Year:</label>
+                    <input type = "number" value= {year || ''} onChange={e => setYear(Number(e.target.value))} />
+                  </form>
+                <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
+              </>
+          ))}
+        </div>
+      </>
+    </MantineProvider>
   )
 }
-
-export default App
