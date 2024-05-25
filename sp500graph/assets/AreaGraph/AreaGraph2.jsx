@@ -21,7 +21,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
     const [prevD, setPrevD] = useState([]);
     const [tooltipVisible, setTooltipVisible] = useState(false);
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-
+    const [tooltipContent, setTooltipContent] = useState("");
 
     // const width= graphWidth + margin.left + margin.right;
     // const height= graphHeight + margin.top + margin.bottom;
@@ -89,7 +89,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
         setXPos(mouseX);
         setYPos(mouseY);
 
-        setTooltipPosition({ x: mouseX, y: mouseY});
+        //setTooltipPosition({ x: mouseX, y: mouseY});
 
         // Find the nearest data point based on mouse position
         let nearestDataPoint = null;
@@ -106,6 +106,8 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
             // Snap the crosshairs to the nearest data point
             setXPos(xScale(nearestDataPoint[0]));
             setYPos(yScale(nearestDataPoint[1]));
+            setTooltipContent(`Value at Close In ${format(nearestDataPoint[0], "MMM yyyy")}: ${nearestDataPoint[1]}`);
+            setTooltipVisible(true);
             setPrevD(nearestDataPoint); // Optional: Save the nearest data point for reference
         }
 
@@ -382,12 +384,23 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
       .on("mouseout", mouseout); */}
             </svg>
             {tooltipVisible && (
-                <div
-                    className="tooltip"
-                    style={{ top: yPos + margin.top, left: xPos + margin.left }}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.9 }}
+                    transition={{ type: 'spring', bounce: 0.5, duration: 0.8 }}
+                    ref={tooltipRef}
+                    style={{
+                        position: 'absolute',
+                        left: xPos - 60,
+                        top: yPos - 10,
+                        background: 'white',
+                        border: '1px solid black',
+                        padding: '5px',
+                        pointerEvents: 'none'
+                    }}
                 >
-                    Date: {format(xScale.invert(xPos), 'MM/dd/yyyy')}, Value: {yScale.invert(yPos)}
-                </div>
+                    {tooltipContent}
+                </motion.div>
             )}
         </>
     );

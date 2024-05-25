@@ -110,7 +110,7 @@ export default function App() {
                     ease: [0, 0.71, 0.2, 1.01]
                   }}
                 >
-                  <SliderInput value={year} onChange={setYear} />
+                  <SliderInput value={year} onChange={setYear} className = "my2"/>
                 </ motion.div>
                 <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
               </>
