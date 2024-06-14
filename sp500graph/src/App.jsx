@@ -8,7 +8,7 @@ import { format, startOfYear, startOfMonth, startOfQuarter, endOfYear, endOfMont
 import * as d3 from 'd3';
 import AreaGraph from '../assets/AreaGraph/AreaGraph.jsx'
 import AreaGraph2 from '../assets/AreaGraph/AreaGraph2.jsx'
-import PieChart from '../assets/PieChart/PieChart.jsx'
+import PieChart3 from '../assets/PieChart/PieChart3.jsx'
 import API from '../utils/API.jsx';
 import { motion } from "framer-motion";
 // Import styles of packages that you've installed.
@@ -112,7 +112,7 @@ export default function App() {
                 >
                   <SliderInput value={year} onChange={setYear} className = "my2"/>
                 </ motion.div>
-                <PieChart height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
+                <PieChart3 height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
               </>
           ))}
         </div>
