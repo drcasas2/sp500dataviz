@@ -99,7 +99,7 @@ export default function App() {
               ) : (
                 bounds.width > 0 &&(
               <>
-                <AreaGraph2 height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+                <AreaGraph2 className = 'mb-2' height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
                 <motion.div
                   className="box"
                   initial={{ opacity: 0, scale: 0.5 }}

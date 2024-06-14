@@ -138,7 +138,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
     return (
         <>
             <svg
-                className=""
+                className="mb-2"
                 viewBox={`0 0 ${width} ${height + 15}`}
                 onMouseMove={handleMouseMove}
                 onMouseLeave = {handleMouseLeave}
@@ -388,7 +388,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.9 }}
                     transition={{ type: 'spring', bounce: 0.5, duration: 0.8 }}
-                    ref={tooltipRef}
+                    //ref={tooltipRef}
                     style={{
                         position: 'absolute',
                         left: xPos - 60,
