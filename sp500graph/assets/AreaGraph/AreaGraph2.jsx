@@ -1,75 +1,47 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-//import styles from './AreaGraph.module.css';
-import useMeasure from "react-use-measure";
-import { format, startOfYear, startOfMonth, startOfQuarter, endOfYear, endOfMonth, endOfQuarter, eachYearOfInterval, eachMonthOfInterval, eachQuarterOfInterval, isSameYear, isSameMonth, isSameQuarter } from "date-fns";
+import { format, startOfYear, startOfMonth, endOfYear, endOfMonth, eachYearOfInterval, eachMonthOfInterval, isSameYear } from "date-fns";
 import { motion } from "framer-motion";
 
 const AreaGraph2 = ({ height, width, dates, values, data }) => {
-    // const tooltipRef = useRef(null);
-    //let [reference, bounds] = useMeasure();
     const tooltipRef = useRef();
     const margin = { top: 20, right: 20, bottom: 15, left: 35 };
     const graphWidth = 600 - margin.left - margin.right;
     const graphHeight = 600 - margin.top - margin.bottom;
-    let previousData = [];
 
     const [xPos, setXPos] = useState(0);
     const [yPos, setYPos] = useState(0);
-    const [prevD, setPrevD] = useState([]);
     const [tooltipVisible, setTooltipVisible] = useState(false);
-    const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
     const [tooltipContent, setTooltipContent] = useState("");
 
-    // // Check if data is valid and not empty
-    if (!Array.isArray(data) || data.length === 0) {
-        return <div width={width} height={height + 15}>No data available</div>;
-    }
-
-    // Check if data points are valid numbers
-    const isValidData = data.every(([x, y]) => Object.prototype.toString.call(x) === '[object Date]' && typeof y === 'number');
-    if (!isValidData) {
-        return <div>Data contains invalid values</div>;
-    }
-
-
-    let startYear = startOfYear(data.at(0)[0]); // Takes first datetime data point in the ascending-order dataset and sets the datetime data point to the start of that year
-    let endYear = endOfYear(data.at(-1)[0]); //  Takes the last datetime data point in the ascending-order dataset and sets the datetime data point to the end of that year
-    let years = eachYearOfInterval({ start: startYear, end: endYear}); // Creates an array of one datetime object from each year that starts on 01 Jan 00:00:00
-    // console.log(years);
-    let startMonth = startOfMonth(data.at(0)[0]); // Takes first datetime data point in the ascending-order dataset and sets the datetime data point to the start of that year
-    let endMonth = endOfMonth(data.at(-1)[0]); //  Takes the last datetime data point in the ascending-order dataset and sets the datetime data point to the end of that year
-    let months = eachMonthOfInterval({ start: startMonth, end: endMonth}); // Creates an array of one datetime object from each year that starts on 01 Jan 00:00:00
-    // console.log(months);
+    const isValidData = Array.isArray(data) && data.every(([x, y]) => Object.prototype.toString.call(x) === '[object Date]' && typeof y === 'number');
+    const hasData = isValidData && data.length > 0;
 
     let xScale = d3.scaleTime()
-            .domain([startYear, endYear]) // Passed in an array of the minimum and maximum dates in the passed in data. Note that the d3.domain() method requires an Array of 2 values - .domain([start, end])
-            //data[0][0], data[data.length - 1][0]
-            //d3.extent(data.map((d) => d[0]))
-            .range([margin.left, width-margin.right]);
-            
+        .domain(hasData ? [startOfYear(data.at(0)[0]), endOfYear(data.at(-1)[0])] : [new Date(), new Date()])
+        .range([margin.left, width - margin.right]);
+
     let yScale = d3.scaleLinear()
-            .domain(d3.extent(data.map((d) => d[1])))
-            .range([height-margin.bottom, margin.top]);
+        .domain(hasData ? d3.extent(data.map((d) => d[1])) : [0, 1])
+        .range([height - margin.bottom, margin.top]);
 
     let line = d3.line()
-            .x((d) => xScale(d[0])) //Returns the x value of each point in the data, and wraps it in the xScale to scale the data across the graph. In this dataset, the first value in each array of value pairs (aka the 'x' in the [x, y] array) is the datetime object.
-            .y((d)=> yScale(d[1])); //Returns the y value of each point in the data, and wraps it in the yScale to scale the data uo and down the graph. In this dataset, the second value in each array of value pairs (aka the 'y' in the [x, y] array) is the S&P500 points value in a floating point number form.
+        .x((d) => xScale(d[0]))
+        .y((d) => yScale(d[1]));
 
-    let result = line(data); // Takes the data passed into the component via a prop, and passes it through the d3.line() function to create the drawing line for the d attribute in the <path> element that will be embedded in the <svg> element.
+    let result = hasData ? line(data) : null;
 
     const handleMouseMove = (event) => {
+        if (!hasData) return;
+
         const { clientX, clientY } = event;
         const svgRect = event.target.getBoundingClientRect();
         const mouseX = clientX - svgRect.left;
         const mouseY = clientY - svgRect.top - margin.top;
-        
+
         setXPos(mouseX);
         setYPos(mouseY);
 
-        //setTooltipPosition({ x: mouseX, y: mouseY});
-
-        // Find the nearest data point based on mouse position
         let nearestDataPoint = null;
         let minDistance = Infinity;
         data.forEach((d) => {
@@ -81,20 +53,16 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
         });
 
         if (nearestDataPoint) {
-            // Snap the crosshairs to the nearest data point
             setXPos(xScale(nearestDataPoint[0]));
             setYPos(yScale(nearestDataPoint[1]));
             setTooltipContent(`Value at Close In ${format(nearestDataPoint[0], "MMM yyyy")}: ${nearestDataPoint[1]}`);
             setTooltipVisible(true);
-            setPrevD(nearestDataPoint); // Optional: Save the nearest data point for reference
         }
 
-        // Show tooltip
         setTooltipVisible(true);
     };
 
     const handleMouseLeave = () => {
-        // Hide tooltip
         setTooltipVisible(false);
     };
 
@@ -104,68 +72,61 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                 className="mb-2"
                 viewBox={`0 0 ${width} ${height + 15}`}
                 onMouseMove={handleMouseMove}
-                onMouseLeave = {handleMouseLeave}
+                onMouseLeave={handleMouseLeave}
             >
-
                 {/* X-Axis minor axis and tick labels */}
-                {years.map((year) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
-                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                        transform = {`translate(${xScale(year)},${height-margin.bottom})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                        className="fill-current" 
+                {hasData && eachYearOfInterval({ start: startOfYear(data.at(0)[0]), end: endOfYear(data.at(-1)[0]) }).map((year) => (
+                    <g
+                        transform={`translate(${xScale(year)},${height - margin.bottom})`}
+                        className="fill-current"
                         key={year}
                     >
                         <line
-                            //key={`line-${index}`}
                             y1={0}
-                            y2={margin.top-height + 10}
+                            y2={margin.top - height + 10}
                             stroke='#718096'
                             strokeWidth={0.5}
                             strokeDasharray="2,4"
                         />
                         {!(year.getYear() === data.at(0)[0].getYear() || year.getYear() === data.at(-1)[0].getYear() || year.getYear().toString().endsWith('0')) && (
-                        <text
-                           //key={`text-${index}`}
-                        //    alignmentBaseline="middle"
-                            x={((xScale(endOfYear(year)) - xScale(year))/2)}
-                            y={10}
-                            textAnchor='middle'
-                            //style={{ fontSize: '10px', fill: '#718096' }}
-                            className="text-xs text-blue-600"
-                        >
-                            {format(year, "yy")}
-                        </text>
+                            <text
+                                x={((xScale(endOfYear(year)) - xScale(year)) / 2)}
+                                y={10}
+                                textAnchor='middle'
+                                className="text-xs text-blue-600"
+                            >
+                                {format(year, "yy")}
+                            </text>
                         )}
-                    </ g>
+                    </g>
                 ))}
 
                 {/* X-Axis Shading */}
-                {years.map((year, i) => (
-                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                    transform = {`translate(${xScale(year)},${14})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                    className="fill-current" 
-                    key={year}
+                {hasData && eachYearOfInterval({ start: startOfYear(data.at(0)[0]), end: endOfYear(data.at(-1)[0]) }).map((year, i) => (
+                    <g
+                        transform={`translate(${xScale(year)},${14})`}
+                        className="fill-current"
+                        key={year}
                     >
-                        {i % 2  === 1 && (
+                        {i % 2 === 1 && (
                             <rect
                                 width={xScale(endOfYear(year)) - xScale(year)}
-                                height={height-margin.bottom-14}
-                                //className='text-green-800'
-                                fill='#F0F4FF' // This color is good for the rectangles: #F0F4FF
-                                pointerEvents="none" // Added this line to disable pointer events for the shaded area. This allows the crosshair to work even in the drawn rectangle areas
+                                height={height - margin.bottom - 14}
+                                fill='#F0F4FF'
+                                pointerEvents="none"
                             />
                         )}
-                    </ g>
+                    </g>
                 ))}
 
                 {/* Y-axis */}
                 {yScale.ticks(5).map((points) => (
                     <g
-                        transform = {`translate(0,${yScale(points)})`} 
-                        className="text-gray-400" 
+                        transform={`translate(0,${yScale(points)})`}
+                        className="text-gray-400"
                         key={points}
                     >
                         <line
-                            //key={`line-${index}`}
                             x1={margin.left}
                             x2={width - margin.right}
                             stroke='#718096'
@@ -173,25 +134,23 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             strokeDasharray="2,4"
                         />
                         <text
-                           //key={`text-${index}`}
-                           alignmentBaseline="middle"
+                            alignmentBaseline="middle"
                             x={0}
                             style={{ fontSize: '10px', fill: '#718096' }}
                         >
                             {points}
                         </text>
-                    </ g>
+                    </g>
                 ))}
 
                 {/* X-axis */}
-                {xScale.ticks(4).concat(startOfYear(data.at(0)[0])).concat(startOfYear(data.at(-1)[0])).map((date) => (
+                {hasData && xScale.ticks(4).concat(startOfYear(data.at(0)[0])).concat(startOfYear(data.at(-1)[0])).map((date) => (
                     <g
-                        transform = {`translate(${xScale(date)},${height - 5})`} 
-                        className="fill-current" 
+                        transform={`translate(${xScale(date)},${height - 5})`}
+                        className="fill-current"
                         key={date}
                     >
                         <line
-                            //key={`line-${index}`}
                             y1={height - margin.bottom}
                             y2={margin.top}
                             stroke='black'
@@ -199,48 +158,48 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             strokeDasharray="2,4"
                         />
                         <text
-                           //key={`text-${index}`}
-                        //    alignmentBaseline="middle"
                             x={-6}
                             y={1}
                             transform={`rotate(50 ${0},${0})`}
-                            //style={{ fontSize: '12px', fill: '#718096' }}
-                            className = 'text-sm text-blue-800'
+                            className='text-sm text-blue-800'
                         >
-                            {/* xScale(endOfYear(year)) - xScale(year) */}
                             {format(date, "yyyy")}
                         </text>
-                    </ g>
+                    </g>
                 ))}
+
                 {/* Line */}
-                <motion.path
-                    initial = {{ pathLength: 0 }}
-                    animate = {{ pathLength: 1 }}
-                    transition = {{ duration: 6, delay: 1.5, type: "spring" }}
-                    d={result}
-                    fill="none"
-                    stroke="currentColor"
-                />
+                {hasData && (
+                    <motion.path
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 6, delay: 1.5, type: "spring" }}
+                        d={result}
+                        fill="none"
+                        stroke="currentColor"
+                    />
+                )}
 
                 {/* Crosshairs */}
-                <g id="crosshairs" style={{ pointerEvents: 'none' }}>
-                    <line x1={margin.left} x2={width - margin.right} y1={yPos} y2={yPos} stroke="gray" strokeWidth="1" strokeDasharray="4" />
-                    <line x1={xPos} x2={xPos} y1={margin.top} y2={height - margin.bottom} stroke="gray" strokeWidth="1" strokeDasharray="4" />
-                </g>
+                {hasData && (
+                    <g id="crosshairs" style={{ pointerEvents: 'none' }}>
+                        <line x1={margin.left} x2={width - margin.right} y1={yPos} y2={yPos} stroke="gray" strokeWidth="1" strokeDasharray="4" />
+                        <line x1={xPos} x2={xPos} y1={margin.top} y2={height - margin.bottom} stroke="gray" strokeWidth="1" strokeDasharray="4" />
+                    </g>
+                )}
 
                 {/* Circles */}
-                {data.map((d, i) => (
+                {hasData && data.map((d, i) => (
                     <motion.circle
-                        initial = {{ cy: height - margin.bottom, scale: 0 }}
-                        animate = {{ cy: yScale(d[1]), scale: 1 }}
-                        transition = {{ type: "spring", duration: 1, delay: 0.006 * i }}
+                        initial={{ cy: height - margin.bottom, scale: 0 }}
+                        animate={{ cy: yScale(d[1]), scale: 1 }}
+                        transition={{ type: "spring", duration: 1, delay: 0.006 * i }}
                         key={d[0]}
                         r="1"
                         cx={xScale(d[0])}
                         cy={yScale(d[1])}
                         fill="currentColor"
-                        stroke={years.findIndex(y => isSameYear(y, d[0])) %2 == 1 ? '#F0F4FF' : 'white'}
-                        // strokeOpacity={years.findIndex(y => isSameYear(y, d[0])) %2 == 1 ? '100%' : '100%'}
+                        stroke={eachYearOfInterval({ start: startOfYear(data.at(0)[0]), end: endOfYear(data.at(-1)[0]) }).findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? '#F0F4FF' : 'white'}
                         strokeWidth={0.5}
                     />
                 ))}
@@ -249,15 +208,17 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                 <motion.div
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.9 }}
-                    transition={{ type: 'spring', bounce: 0.5, duration: 0.8 }}
-                    //ref={tooltipRef}
+                    transition={{ type: 'spring', bounce: 0.5, duration: 0.5 }}
+                    className="tooltip"
+                    ref={tooltipRef}
                     style={{
                         position: 'absolute',
-                        left: xPos - 60,
-                        top: yPos - 10,
-                        background: 'white',
-                        border: '1px solid black',
+                        left: xPos,
+                        top: yPos,
+                        backgroundColor: 'white',
                         padding: '5px',
+                        border: '1px solid black',
+                        borderRadius: '3px',
                         pointerEvents: 'none'
                     }}
                 >
@@ -267,6 +228,5 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
         </>
     );
 };
-
 
 export default AreaGraph2;
