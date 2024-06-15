@@ -70,8 +70,7 @@ export default function App() {
   //const fetch
 
   useEffect(() => {
-      fetchMonthlyData();
-      fetchYearlySectorWeights();
+      fetchMonthlyData().then(fetchYearlySectorWeights());
   }, []);
 
   useEffect(() => {
@@ -84,13 +83,13 @@ export default function App() {
     <MantineProvider>  
       <>
         <motion.h1
-        className='text-center text-2xl font-extrabold font-sans text-blue-500'
-        initial = {{ opacity: 0}}
-        animate = {{ opacity: 1 }}
-        transition = {{ duration: 4, delay: 0.5, type: "spring" }}
+          className='text-center text-2xl font-extrabold font-sans text-blue-500'
+          initial = {{ opacity: 0}}
+          animate = {{ opacity: 1 }}
+          transition = {{ duration: 4, delay: 0.5, type: "spring" }}
         >
           S&P 500 Data (1993 - 2024)
-          </motion.h1>
+        </motion.h1>
         <div
           className = "my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}
         >
@@ -99,20 +98,31 @@ export default function App() {
               ) : (
                 bounds.width > 0 &&(
               <>
-                <AreaGraph2 className = 'mb-2' height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
                 <motion.div
                   className="box"
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
                     duration: 0.8,
-                    delay: 0.8,
+                    delay: 0,
+                    ease: [0, 0.71, 0.2, 1.01]
+                  }}
+                >
+                  <AreaGraph2 className = 'mb-2' height={bounds.height} width={bounds.width} dates={dates} values = {values} data={data}/>
+                </motion.div>
+                <motion.div
+                  className="box"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0,
                     ease: [0, 0.71, 0.2, 1.01]
                   }}
                 >
                   <SliderInput value={year} onChange={setYear} className = "my2"/>
+                  <PieChart3 height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
                 </ motion.div>
-                <PieChart3 height={bounds.height} width={bounds.width} yearlySectorWeights = {yearlySectorWeights} year={year} className = 'w-full text-center items-center justify-center'/>
               </>
           ))}
         </div>

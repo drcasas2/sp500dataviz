@@ -1,5 +1,3 @@
-// You need to figure out why there is a big black box in front of your graph when you tried to add a tooltip
-
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 //import styles from './AreaGraph.module.css';
@@ -23,16 +21,9 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
     const [tooltipContent, setTooltipContent] = useState("");
 
-    // const width= graphWidth + margin.left + margin.right;
-    // const height= graphHeight + margin.top + margin.bottom;
-
-    // console.log(data);
-    // const data2 = Object.entries(data).map(([key, value]) => [key, value]);
-    // console.log(`data2: ${data2}`);
-
-    // Check if data is valid and not empty
+    // // Check if data is valid and not empty
     if (!Array.isArray(data) || data.length === 0) {
-        return <div>No data available</div>;
+        return <div width={width} height={height + 15}>No data available</div>;
     }
 
     // Check if data points are valid numbers
@@ -41,19 +32,6 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
         return <div>Data contains invalid values</div>;
     }
 
-    // // Check if data points are valid numbers
-    // const isValidData = data.every(([x, y]) => typeof x === 'number'Object.prototype.toString.call(date) && typeof y === 'number');
-    // if (!isValidData) {
-    //     return <div>Data contains invalid values</div>;
-    // }
-
-    // console.log(typeof(data[0][1]));
-    // console.log(data[0][0]);
-    // console.log(data[0][0] instanceof Date);
-    // console.log(data[data.length - 1][0])
-    // console.log(data[data.length - 1][0] instanceof Date)
-    // const data3 = data2.map(([_, value]) => [value[0], value[1]]);
-    // console.log(`data3: ${data3}`);
 
     let startYear = startOfYear(data.at(0)[0]); // Takes first datetime data point in the ascending-order dataset and sets the datetime data point to the start of that year
     let endYear = endOfYear(data.at(-1)[0]); //  Takes the last datetime data point in the ascending-order dataset and sets the datetime data point to the end of that year
@@ -120,21 +98,6 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
         setTooltipVisible(false);
     };
 
-    // const mouseover = (event, d) => {
-    //     setXPos(d[0])
-    //     setYPos(d[1])
-    //     //event.target.style['stroke-opacity'] = '1';
-    //     event.target.style['stroke-opacity'] = '1';
-    //     // console.log(format(xPos, 'MM/dd/yyyy'), yPos)
-    //     };
-  
-    //   const mouseout = (event) => {
-    //     //event.target.style['stroke-opacity'] = '0';
-    //     event.target.style['stroke-opacity'] = '0';
-    //   };
-
-    //data.map(d => console.log(years.findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? "" : format(d[0], "yyyy")))
-
     return (
         <>
             <svg
@@ -193,37 +156,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         )}
                     </ g>
                 ))}
-                {/* {years.map((year, i) => (
-                    <g
-                        transform={`translate(${xScale(year)}, ${height-margin.bottom})`}
-                        className="fill-current"
-                        key={year}
-                    >
-                        {i % 2 === 1 && (
-                            <path
-                                d={`M 0 0 L ${xScale(endOfYear(year)) - xScale(year)} 0 L ${xScale(endOfYear(year)) - xScale(year)} ${margin.top - height + 10} L 0 ${margin.top - height + 10} Z`}
-                                fill="#F0F4FF"
-                                pointerEvents="none" // Added this line to disable pointer events for the shaded area. This allows the crosshair to work even in the drawn rectangle areas
-                            />
-                        )}
-                    </g>
-                ))} */}
 
-                {/* {years.map((year, i) => (
-                    <g
-                        transform={`translate(${xScale(year)}, ${height-margin.bottom})`}
-                        className="fill-current"
-                        key={year}
-                    >
-                        {i % 2 === 1 && (
-                            <rect
-                                width={xScale(endOfYear(year)) - xScale(year)}
-                                height={margin.top-height}
-                                fill="#F0F4FF"
-                            />
-                        )}
-                    </g>
-                ))} */}
                 {/* Y-axis */}
                 {yScale.ticks(5).map((points) => (
                     <g
@@ -288,80 +221,13 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                     fill="none"
                     stroke="currentColor"
                 />
-                {/* X-Axis Hidden Rectangles*/}
-                {/* I did the X-Axis Shading last and just brought it up to the top so that it draws onto the svg first, so the line draws over the shading. SVG elements draw in the order they are shown, so these shaded boxes are drawn at the bottom, before the line or dotted axes. */}
-                {/* {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
-                    <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                        transform = {`translate(${xScale(d[0])},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                        className="fill-current" 
-                        key={d} 
-                    >
-                        {
-                            <line
-                                y1={height -15}
-                                y2={0}
-                                className='highlightRectX'
-                                //className='text-green-800'
-                                stroke='darkblue'
-                                stroke-opacity='0'
-                                onMouseOver={(e) => mouseover(e, d)}
-                                onMouseOut={(e) => mouseout(e)}
-                                // This color is good for the rectangles: #F0F4FF
-                                // fillOpacity='8%'
-                            />
-                        }
-                    </ g>
-                ))} */}
+
                 {/* Crosshairs */}
                 <g id="crosshairs" style={{ pointerEvents: 'none' }}>
                     <line x1={margin.left} x2={width - margin.right} y1={yPos} y2={yPos} stroke="gray" strokeWidth="1" strokeDasharray="4" />
                     <line x1={xPos} x2={xPos} y1={margin.top} y2={height - margin.bottom} stroke="gray" strokeWidth="1" strokeDasharray="4" />
                 </g>
 
-                {/* {data.map((d, i) => ( // Takes the years variable which creates an array of each of the years on the graph, and performs a map array method for each year
-                    <>
-                        <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                            transform = {`translate(0,${yScale(d[1])})`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                            className="fill-current" 
-                            key={d} 
-                        >
-                            {
-                                <line
-                                    x1={width}
-                                    x2={0}
-                                    className='highlightRectX'
-                                    //className='text-green-800'
-                                    stroke='darkblue'
-                                    stroke-opacity='0'
-                                    onMouseOver={(e) => mouseover(e, d)}
-                                    onMouseOut={(e) => mouseout(e)}
-                                    // This color is good for the rectangles: #F0F4FF
-                                    // fillOpacity='8%'
-                                />
-                            }
-                        </ g>
-                        <g                                              // Create a <g> element to group the entire X-Axis shading drawing.
-                            transform = {`translate(${xScale(d[0])},0)`} // Alter the frame of reference to start each drawing at the beginning of the year, and end each drawing at the end of each year. The height is set to 0 so the drawing of each rectangle starts at the top of the SVG element, since SVG coordinates (0,0) typically start the top left
-                            className="fill-current" 
-                            key={d} 
-                        >
-                            {
-                                <line
-                                    y1={height -15}
-                                    y2={0}
-                                    className='highlightRectX'
-                                    //className='text-green-800'
-                                    stroke='darkblue'
-                                    stroke-opacity='0'
-                                    onMouseOver={(e) => mouseover(e, d)}
-                                    onMouseOut={(e) => mouseout(e)}
-                                    // This color is good for the rectangles: #F0F4FF
-                                    // fillOpacity='8%'
-                                />
-                            }
-                        </ g>
-                    </>
-                ))} */}
                 {/* Circles */}
                 {data.map((d, i) => (
                     <motion.circle
@@ -378,10 +244,6 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         strokeWidth={0.5}
                     />
                 ))}
-      {/* .attr("r", 5)
-      .attr("fill", "#69b3a2")
-      .on("mouseover", mouseover)
-      .on("mouseout", mouseout); */}
             </svg>
             {tooltipVisible && (
                 <motion.div
