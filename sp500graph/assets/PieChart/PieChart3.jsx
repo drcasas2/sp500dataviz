@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const PieChart = ({ height, width, yearlySectorWeights, year }) => {
 
-    const margin = { top: 20, right: 20, bottom: 20, left: 20 }
+    const margin = { top: 40, right: 40, bottom: 40, left: 40 }
 
     const [data] = useState(yearlySectorWeights);
 
@@ -31,18 +31,18 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
         const h = height;
         const radius = Math.min(w, h) / 2;
         const colorScale = d3.scaleOrdinal(['#B8B8B8','#007CBE','#2748A5','#7086FF','#D7F3DF','#2A2B2E','#33B8FF','#99DBFF','#3961D0','#1B3374','#000F66','#031A6B']);
-        const svg = d3.select(svgRef.current)
-            .attr('width', '100%')
-            .attr('height', '100%')
-            .attr('viewBox', `0 0 ${w + margin.left + margin.right} ${h + margin.top + margin.bottom}`)
-            .style('overflow', 'hidden')
-            .style('margin-top', margin.top)
-            .style('margin-left', 'auto')
-            .style('margin-right', 'auto')
-            .style("margin-bottom", margin.bottom);
-            //.style('margin', 'auto');
+        // const svg = d3.select(svgRef.current)
+        //     .attr('width', '100%')
+        //     .attr('height', '100%')
+        //     .attr('viewBox', `0 0 ${w + margin.left + margin.right} ${h + margin.top + margin.bottom}`)
+        //     .style('overflow', 'hidden')
+        //     .style('margin-top', margin.top)
+        //     .style('margin-left', 'auto')
+        //     .style('margin-right', 'auto')
+        //     .style("margin-bottom", margin.bottom);
+        //     //.style('margin', 'auto');
 
-            svg.selectAll("*").remove();
+        //     svg.selectAll("*").remove();
         //set up chart
 
         //console.log(yearData.map(d => Object.values(d.Sector)))
@@ -55,6 +55,9 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
         const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
         const arcs = pie(yearData);
         console.log(arcs);
+
+
+
         //set up svg data
         
         // const arcGroup = svg
@@ -86,7 +89,7 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
     <>
         {findYearData ? (
                 <svg
-                    className="mx-auto"
+                    className="mx-auto my-0"
                     width='100%'
                     height='100%'
                     viewBox={`0 0 ${w + margin.left + margin.right} ${h + margin.top + margin.bottom}`}
@@ -94,57 +97,61 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
                     // onMouseMove={handleMouseMove}
                     // onMouseLeave = {handleMouseLeave}
                 >
-                    <motion.g
-                        transform = {`translate(${(w + margin.left + margin.right) / 2}, ${(h + margin.top + margin.bottom) / 2})`}
-                        className="fill-current" 
-                        initial="hidden"
-                        animate="visible"
-                        variants={{
-                            visible: {
-                                transition: {
-                                    staggerChildren: 0.2
-                                }
-                            }
-                        }}
-                    >
-
-
                             {arcs.map((arc, i) => {
                                 return (
-                                    <motion.path
-                                        key={arc.index}
-                                        d={arcGenerator(arc)}
-                                        fill={colorScale(arc.index)}
-                                        stroke="white"
-                                        strokeWidth="3"
-                                        initial={{
-                                            opacity: 0,
-                                            pathLength: 0
-                                        }}
-                                        animate={{
-                                            opacity: 1,
-                                            pathLength: 1
-                                        }}
-                                        transition={{
-                                            duration: 1,
-                                            delay: arc.index * 0.1,
-                                        }}
-                                        // className="box"
-                                        // animate={{
-                                        //   scale: [0.9, 1, 1, 0.9, 0.9],
-                                        //   rotate: [0, 0, 180, 180, 0],
-                                        //   borderRadius: ["0%", "0%", "20%", "20%", "0%"]
-                                        // }}
-                                        // transition={{
-                                        //   duration: 2,
-                                        //   ease: "backInOut",
-                                        //   times: [0, 0.2, 0.5, 0.8, 1],
-                                        //   repeat: false,
-                                        //   repeatDelay: 1
-                                        // }}
-                                    />
+                                    <motion.g
+                                    transform = {`translate(${(w + margin.left + margin.right) / 2}, ${(h + margin.top + margin.bottom) / 2})`}
+                                    className="fill-current" 
+                                    key={arc.index}
+                                    initial="hidden"
+                                    animate="visible"
+                                    variants={{
+                                        visible: {
+                                            transition: {
+                                                staggerChildren: 0.2
+                                            }
+                                        }
+                                    }}
+                                    >
+                                        <motion.path
+                                            key={arc.index}
+                                            d={arcGenerator(arc)}
+                                            fill={colorScale(arc.index)}
+                                            stroke="white"
+                                            strokeWidth="3"
+                                            initial={{
+                                                opacity: 0,
+                                                pathLength: 0
+                                            }}
+                                            animate={{
+                                                opacity: 1,
+                                                pathLength: 1
+                                            }}
+                                            transition={{
+                                                duration: 1,
+                                                delay: arc.index * 0.1,
+                                            }}
+                                        />
+                                        <text
+                                            transform={`translate(${arcGenerator.centroid(arc).map(coord => coord * 2.39)})`}
+                                            textAnchor="middle"
+                                            dy="0em"
+                                            style={{ fontSize: '10px', fill: colorScale(arc.index), fontWeight: 'bold'}}
+                                        >
+                                            {arc.data.Sector}
+                                        </text>
+                                            <br />
+                                        <text
+                                            transform={`translate(${arcGenerator.centroid(arc).map(coord => coord * 2.39)})`}
+                                            textAnchor="middle"
+                                            dy="1.1em"
+                                            style={{ fontSize: '10px', fontWeight: 'bold', fill: colorScale(arc.index) }}
+                                        >
+                                            {arc.data.Value}%
+                                        </text>
+                                        {console.log(arc)}
+                                    </motion.g>
                             )})}
-                    </motion.g>
                 </ svg>
             ) : (
                 <h1>No Sector Data Found for that Year...</h1>
