@@ -55,6 +55,28 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
         const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
         const arcs = pie(yearData);
         console.log(arcs);
+
+        const repositionLabels = (labels) => {
+            for (let i = 0; i < labels.length; i++) {
+                for (let j = i + 1; j < labels.length; j++) {
+                    const labelA = labels[i];
+                    const labelB = labels[j];
+                    labelA.y += 5;
+                    if (Math.abs(labelA.x - labelB.x) < 15 || Math.abs(labelA.y - labelB.y) < 15) {
+                        labelB.y += -18;
+                        labelB.x += 10;
+                    }
+                }
+            }
+            return labels;
+        };
+    
+        const labels = arcs.map((arc, i) => {
+            const [x, y] = arcGenerator.centroid(arc).map(coord => coord * 2.5);
+            return { x, y, Sector: arc.data.Sector, Value: arc.data.Value, color: colorScale(arc.index) };
+        });
+    
+        const adjustedLabels = repositionLabels(labels);
         //set up svg data
         
         // const arcGroup = svg
@@ -86,7 +108,7 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
     <>
         {findYearData ? (
                 <svg
-                    className="mx-auto my-0"
+                    className="fill-current py-5 overflow-visible"
                     width='100%'
                     height='100%'
                     viewBox={`0 0 ${w + margin.left + margin.right} ${h + margin.top + margin.bottom}`}
@@ -130,21 +152,14 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
                                             }}
                                         />
                                         <text
-                                            transform={`translate(${arcGenerator.centroid(arc).map(coord => coord * 2.39)})`}
+                                            transform={`translate(${adjustedLabels[i].x}, ${adjustedLabels[i].y})`}
                                             textAnchor="middle"
+                                            className="text-inherit mix-blend-multiply stroke-black stroke-[0.2px]"
+                                            y='0em'
                                             dy="0em"
                                             style={{ fontSize: '10px', fill: colorScale(arc.index), fontWeight: 'bold'}}
                                         >
-                                            {arc.data.Sector}
-                                        </text>
-                                            <br />
-                                        <text
-                                            transform={`translate(${arcGenerator.centroid(arc).map(coord => coord * 2.39)})`}
-                                            textAnchor="middle"
-                                            dy="1.1em"
-                                            style={{ fontSize: '10px', fontWeight: 'bold', fill: colorScale(arc.index) }}
-                                        >
-                                            {arc.data.Value}%
+                                            {adjustedLabels[i].Sector}: {adjustedLabels[i].Value}%
                                         </text>
                                         {console.log(arc)}
                                     </motion.g>
