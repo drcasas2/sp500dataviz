@@ -55,9 +55,6 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
         const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
         const arcs = pie(yearData);
         console.log(arcs);
-
-
-
         //set up svg data
         
         // const arcGroup = svg
