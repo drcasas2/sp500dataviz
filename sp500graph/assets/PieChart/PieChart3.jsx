@@ -1,8 +1,9 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
+import { format, startOfYear, endOfYear, eachYearOfInterval } from "date-fns";
 import { motion } from "framer-motion";
 
-const PieChart = ({ height, width, yearlySectorWeights, year }) => {
+const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
     const margin = { top: 40, right: 40, bottom: 40, left: 40 }
 
     const [data] = useState(yearlySectorWeights);
@@ -43,17 +44,17 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
     return (
         <>
             {findYearData ? (
-                <div className="flex justify-center items-center w-full">
-                    <div className="flex flex-col items-end mr-0">
+                <div className="flex justify-center items-center w-auto mx-10">
+                    <div className="flex flex-col items-end mr-3 flex-shrink-0 flex-grow-0 w-auto">
                         {leftLabels.map((label, i) => (
                             <div key={i} className="text-end" style={{ color: label.color, fontWeight: 'bold', fontSize: '10px' }}>
                                 {label.Sector}: {label.Value}%
                             </div>
                         ))}
                     </div>
-                    <div className="relative w-auto h-full mx-0">
+                    <div className="flex-shrink-3 flex-grow-0 mx-1 w-full h-auto">
                         <svg
-                            className="fill-current py-0 m-0 block"
+                            className="fill-current overflow-visible py-0 m-0 block w-full h-auto"
                             width={w / 2}
                             height={h}
                             viewBox={`0 0 ${w + margin.right + margin.left} ${h + margin.top + margin.bottom}`}
@@ -97,7 +98,7 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
                             </g>
                         </svg>
                     </div>
-                    <div className="flex flex-col items-start ml-0">
+                    <div className="flex flex-col items-end ml-3 flex-shrink-0 flex-grow-0 w-auto">
                         {rightLabels.map((label, i) => (
                             <div key={i} className="text-start" style={{ color: label.color, fontWeight: 'bold', fontSize: '10px' }}>
                                 {label.Sector}: {label.Value}%
@@ -112,5 +113,4 @@ const PieChart = ({ height, width, yearlySectorWeights, year }) => {
     );
 };
 
-
-export default PieChart;
+export default PieChart3;

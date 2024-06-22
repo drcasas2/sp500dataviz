@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { format, startOfYear, startOfMonth, endOfYear, endOfMonth, eachYearOfInterval, eachMonthOfInterval, isSameYear } from "date-fns";
+import { format, startOfYear, endOfYear, eachYearOfInterval, isSameYear } from "date-fns";
 import { motion } from "framer-motion";
 
 const AreaGraph2 = ({ height, width, dates, values, data }) => {
@@ -84,16 +84,14 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         <line
                             y1={0}
                             y2={margin.top - height + 10}
-                            stroke='#718096'
-                            strokeWidth={0.5}
-                            strokeDasharray="2,4"
+                            className="stroke-gray-400 stroke-[0.5] stroke-dasharray-[2,4]"
                         />
                         {!(year.getYear() === data.at(0)[0].getYear() || year.getYear() === data.at(-1)[0].getYear() || year.getYear().toString().endsWith('0')) && (
                             <text
                                 x={((xScale(endOfYear(year)) - xScale(year)) / 2)}
                                 y={10}
                                 textAnchor='middle'
-                                className="text-xs text-blue-600"
+                                className="fill-current text-xs sm:text-sm md:text-base"
                             >
                                 {format(year, "yy")}
                             </text>
@@ -112,8 +110,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             <rect
                                 width={xScale(endOfYear(year)) - xScale(year)}
                                 height={height - margin.bottom - 14}
-                                fill='#F0F4FF'
-                                pointerEvents="none"
+                                className="fill-[#F0F4FF] pointer-events-none"
                             />
                         )}
                     </g>
@@ -129,14 +126,12 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         <line
                             x1={margin.left}
                             x2={width - margin.right}
-                            stroke='#718096'
-                            strokeWidth={0.5}
-                            strokeDasharray="2,4"
+                            className="stroke-gray-400 stroke-[0.5] stroke-dasharray-[2,4]"
                         />
                         <text
                             alignmentBaseline="middle"
                             x={0}
-                            style={{ fontSize: '10px', fill: '#718096' }}
+                            className="text-[10px] fill-gray-400"
                         >
                             {points}
                         </text>
@@ -153,15 +148,13 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         <line
                             y1={height - margin.bottom}
                             y2={margin.top}
-                            stroke='black'
-                            strokeWidth={1}
-                            strokeDasharray="2,4"
+                            className="stroke-black stroke-[1] stroke-dasharray-[2,4]"
                         />
                         <text
-                            x={-6}
+                            x={0}
                             y={1}
-                            transform={`rotate(50 ${0},${0})`}
-                            className='text-sm text-blue-800'
+                            transform={`rotate(50 ${8},${3})`}
+                            className="fill-current text-xs sm:text-sm md:text-base"
                         >
                             {format(date, "yyyy")}
                         </text>
@@ -182,9 +175,9 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
 
                 {/* Crosshairs */}
                 {hasData && (
-                    <g id="crosshairs" style={{ pointerEvents: 'none' }}>
-                        <line x1={margin.left} x2={width - margin.right} y1={yPos} y2={yPos} stroke="gray" strokeWidth="1" strokeDasharray="4" />
-                        <line x1={xPos} x2={xPos} y1={margin.top} y2={height - margin.bottom} stroke="gray" strokeWidth="1" strokeDasharray="4" />
+                    <g id="crosshairs" className="pointer-events-none">
+                        <line x1={margin.left} x2={width - margin.right} y1={yPos} y2={yPos} className="stroke-gray-400 stroke-[1] stroke-dasharray-[4]" />
+                        <line x1={xPos} x2={xPos} y1={margin.top} y2={height - margin.bottom} className="stroke-gray-400 stroke-[1] stroke-dasharray-[4]" />
                     </g>
                 )}
 
@@ -198,32 +191,19 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         r="1"
                         cx={xScale(d[0])}
                         cy={yScale(d[1])}
-                        fill="currentColor"
-                        stroke={eachYearOfInterval({ start: startOfYear(data.at(0)[0]), end: endOfYear(data.at(-1)[0]) }).findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? '#F0F4FF' : 'white'}
-                        strokeWidth={0.5}
+                        className="fill-current"
+                        stroke={eachYearOfInterval({ start: startOfYear(data.at(0)[0]), end: endOfYear(data.at(-1)[0]) }).findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? 'stroke-[#F0F4FF]' : 'stroke-black'}
                     />
                 ))}
             </svg>
             {tooltipVisible && (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 0.9 }}
-                    transition={{ type: 'spring', bounce: 0.5, duration: 0.5 }}
-                    className="tooltip"
+                <div
+                    className="absolute p-1 text-xs text-white bg-black rounded"
+                    style={{ top: yPos - 50, left: xPos }}
                     ref={tooltipRef}
-                    style={{
-                        position: 'absolute',
-                        left: xPos,
-                        top: yPos,
-                        backgroundColor: 'white',
-                        padding: '5px',
-                        border: '1px solid black',
-                        borderRadius: '3px',
-                        pointerEvents: 'none'
-                    }}
                 >
                     {tooltipContent}
-                </motion.div>
+                </div>
             )}
         </>
     );
