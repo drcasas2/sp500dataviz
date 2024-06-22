@@ -35,28 +35,28 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
     const leftLabels = labels.filter(label => label.x < 0).sort((a, b) => a.y - b.y);
     const rightLabels = labels.filter(label => label.x >= 0).sort((a, b) => a.y - b.y);
 
-    const textHeight = 20; // Height of each text line
-    const leftLabelStartY = (h - leftLabels.length * textHeight) / 2 + margin.top;
-    const rightLabelStartY = (h - rightLabels.length * textHeight) / 2 + margin.top;
+    //const textHeight = 20; // Height of each text line
+    const leftLabelStartY = (h - leftLabels.length) / 2 + margin.top;
+    const rightLabelStartY = (h - rightLabels.length) / 2 + margin.top;
 
     console.log(yearlySectorWeights);
 
     return (
         <>
             {findYearData ? (
-                <div className="flex justify-center items-center w-auto mx-10">
-                    <div className="flex flex-col items-end mr-3 flex-shrink-0 flex-grow-0 w-auto">
+                <div className="flex justify-center items-center w-auto mx-5">
+                    <div className="flex flex-col justify-end items-end mr-5 flex-shrink-0 flex-grow-0 w-auto leading-3 sm:leading-3 md:leading-4 lg:leading-7 xl:leading-7">
                         {leftLabels.map((label, i) => (
-                            <div key={i} className="text-end" style={{ color: label.color, fontWeight: 'bold', fontSize: '10px' }}>
-                                {label.Sector}: {label.Value}%
+                            <div key={i} className="text-right" style={{ color: label.color}}>
+                                <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Sector}:</span> <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Value}%</span>
                             </div>
                         ))}
                     </div>
-                    <div className="flex-shrink-3 flex-grow-0 mx-1 w-full h-auto">
+                    <div className="flex-shrink-3 flex-grow-0 my-5 mx-1 w-full h-auto">
                         <svg
-                            className="fill-current overflow-visible py-0 m-0 block w-full h-auto"
-                            width={w / 2}
-                            height={h}
+                            className="fill-current overflow-visible py-0 my-5 mx-0 block w-full min-w-9 h-auto"
+                            width={w}
+                            height={h + margin.top + margin.bottom}
                             viewBox={`0 0 ${w + margin.right + margin.left} ${h + margin.top + margin.bottom}`}
                         >
                             <g transform={`translate(${(w + margin.left + margin.right) / 2}, ${(h + margin.top + margin.bottom) / 2})`}>
@@ -98,10 +98,10 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
                             </g>
                         </svg>
                     </div>
-                    <div className="flex flex-col items-end ml-3 flex-shrink-0 flex-grow-0 w-auto">
+                    <div className="flex flex-col justify-start items-start ml-5 flex-shrink-0 flex-grow-0 w-auto leading-3 sm:leading-3 md:leading-4 lg:leading-7 xl:leading-7">
                         {rightLabels.map((label, i) => (
-                            <div key={i} className="text-start" style={{ color: label.color, fontWeight: 'bold', fontSize: '10px' }}>
-                                {label.Sector}: {label.Value}%
+                            <div key={i} className="text-left" style={{ color: label.color, fontWeight: 'bold' }}>
+                                <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Sector}:</span> <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Value}%</span>
                             </div>
                         ))}
                     </div>

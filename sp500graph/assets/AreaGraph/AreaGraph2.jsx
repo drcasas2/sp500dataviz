@@ -91,7 +91,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                                 x={((xScale(endOfYear(year)) - xScale(year)) / 2)}
                                 y={10}
                                 textAnchor='middle'
-                                className="fill-current text-xs sm:text-sm md:text-base"
+                                className="fill-current text-sm sm:text-sm md:text-sm lg:text-base"
                             >
                                 {format(year, "yy")}
                             </text>
@@ -131,7 +131,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         <text
                             alignmentBaseline="middle"
                             x={0}
-                            className="text-[10px] fill-gray-400"
+                            className="text-base sm:text-base md:text-lg lg:text-xl fill-gray-500"
                         >
                             {points}
                         </text>
@@ -154,7 +154,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                             x={0}
                             y={1}
                             transform={`rotate(50 ${8},${3})`}
-                            className="fill-current text-xs sm:text-sm md:text-base"
+                            className="fill-current text-sm sm:text-sm md:text-base lg:text-xl"
                         >
                             {format(date, "yyyy")}
                         </text>
@@ -197,13 +197,16 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                 ))}
             </svg>
             {tooltipVisible && (
-                <div
-                    className="absolute p-1 text-xs text-white bg-black rounded"
-                    style={{ top: yPos - 50, left: xPos }}
+                <motion.div
+                    className="absolute p-1 text-sm sm:text-sm md:text-sm lg:text-base text-blue-500 border-solid border-1 border-blue-900 bg-white rounded pointer-events-none"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.9 }}
+                    transition={{ type: 'spring', bounce: 0.5, duration: 0.5 }}
+                    style={{ top: yPos, left: xPos }}
                     ref={tooltipRef}
                 >
                     {tooltipContent}
-                </div>
+                </motion.div>
             )}
         </>
     );
