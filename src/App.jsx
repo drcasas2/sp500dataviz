@@ -48,7 +48,7 @@ export default function App() {
         <MantineProvider>  
             <>
                 <motion.h1
-                    className='text-center text-2xl font-extrabold font-sans text-blue-500'
+                    className='text-center text-2xl font-extrabold font-sans text-blue-500 mt-3'
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 4, delay: 0.5, type: "spring" }}
@@ -97,7 +97,7 @@ export default function App() {
                                     ease: [0, 0.71, 0.2, 1.01]
                                 }}
                             >
-                                <PieChart3 className='-mt-8' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
+                                <PieChart3 className='-mt-40 border-solid border-slate-900 border-2' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
                             </motion.div>
                         </>
                         )
