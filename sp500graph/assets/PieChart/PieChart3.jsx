@@ -1,10 +1,9 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import { format, startOfYear, endOfYear, eachYearOfInterval } from "date-fns";
 import { motion } from "framer-motion";
 
 const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
-    const margin = { top: 40, right: 40, bottom: 40, left: 40 }
+    const margin = { top: 40, right: 40, bottom: 40, left: 40 };
 
     const [data] = useState(yearlySectorWeights);
 
@@ -20,9 +19,9 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
     if (!findYearData) return;
 
     const w = width;
-    const h = height;
-    const radius = Math.min(w, h);
-    const colorScale = d3.scaleOrdinal(['#B8B8B8','#007CBE','#2748A5','#7086FF','#D7F3DF','#2A2B2E','#33B8FF','#99DBFF','#3961D0','#1B3374','#000F66','#031A6B']);
+    const h = height*3;
+    const radius = Math.min(w, h)/2 - Math.max(margin.top, margin.bottom);
+    const colorScale = d3.scaleOrdinal(['#B8B8B8', '#007CBE', '#2748A5', '#7086FF', '#D7F3DF', '#2A2B2E', '#33B8FF', '#99DBFF', '#3961D0', '#1B3374', '#000F66', '#031A6B']);
     const pie = d3.pie().value(d => d.Value);
     const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
     const arcs = pie(yearData);
@@ -35,31 +34,24 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
     const leftLabels = labels.filter(label => label.x < 0).sort((a, b) => a.y - b.y);
     const rightLabels = labels.filter(label => label.x >= 0).sort((a, b) => a.y - b.y);
 
-    //const textHeight = 20; // Height of each text line
-    const leftLabelStartY = (h - leftLabels.length) / 2 + margin.top;
-    const rightLabelStartY = (h - rightLabels.length) / 2 + margin.top;
-
-    console.log(yearlySectorWeights);
-
     return (
         <>
             {findYearData ? (
-                <div className="flex justify-center items-center w-auto mx-5">
-                    <div className="flex flex-col justify-end items-end mr-5 flex-shrink-0 flex-grow-0 w-auto leading-3 sm:leading-3 md:leading-4 lg:leading-7 xl:leading-7">
+                <div className="grid grid-cols-3 gap-0 mx-1 -mt-12 lg:-mt-4 md:-mt-4 sm:-mt-8 justify-center h-15">
+                    <div className="inline-flex flex-col justify-start items-end mr-0 flex-shrink-0 w-auto h-auto my-auto">
                         {leftLabels.map((label, i) => (
-                            <div key={i} className="text-right" style={{ color: label.color}}>
-                                <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Sector}:</span> <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Value}%</span>
+                            <div key={i} className="text-right my-0 leading-3" style={{ color: label.color }}>
+                                <span className="flex-nowrap text-sm my-0 sm:text-base md:text-lg lg:text-2xl font-bold leading-3 sm:leading-tight md:leading-normal">{label.Sector}: {label.Value}%</span>
                             </div>
                         ))}
                     </div>
-                    <div className="flex-shrink-3 flex-grow-0 my-5 mx-1 w-full h-auto">
+                    <div className="inline-flex mx-1 w-full h-full my-auto">
                         <svg
-                            className="fill-current overflow-visible py-0 my-5 mx-0 block w-full min-w-9 h-auto"
-                            width={w}
-                            height={h + margin.top + margin.bottom}
-                            viewBox={`0 0 ${w + margin.right + margin.left} ${h + margin.top + margin.bottom}`}
+                            className="fill-current overflow-hidden my-auto mx-auto w-auto h-full align-middle content-center"
+                            viewBox={`0 0 ${w} ${h}`}
+                            preserveAspectRatio="xMidYMid meet"
                         >
-                            <g transform={`translate(${(w + margin.left + margin.right) / 2}, ${(h + margin.top + margin.bottom) / 2})`}>
+                            <g transform={`translate(${w / 2}, ${h/ 2})`}>
                                 {arcs.map((arc, i) => (
                                     <motion.g
                                         className="fill-current"
@@ -98,10 +90,10 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
                             </g>
                         </svg>
                     </div>
-                    <div className="flex flex-col justify-start items-start ml-5 flex-shrink-0 flex-grow-0 w-auto leading-3 sm:leading-3 md:leading-4 lg:leading-7 xl:leading-7">
+                    <div className="inline-flex flex-col justify-start items-start ml-2 flex-shrink-0 w-auto my-auto">
                         {rightLabels.map((label, i) => (
-                            <div key={i} className="text-left" style={{ color: label.color, fontWeight: 'bold' }}>
-                                <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Sector}:</span> <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Value}%</span>
+                            <div key={i} className="text-left my-0 leading-3" style={{ color: label.color, fontWeight: 'bold' }}>
+                                <span className=" flex-nowrap text-sm my-0 sm:text-base md:text-lg lg:text-2xl font-bold leading-3 sm:leading-tight md:leading-normal">{label.Sector}: {label.Value}%</span>
                             </div>
                         ))}
                     </div>
