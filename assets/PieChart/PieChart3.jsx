@@ -37,11 +37,11 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
     return (
         <>
             {findYearData ? (
-                <div className="grid grid-cols-3 gap-0 mx-6 my-0 justify-center h-full">
+                <div className="grid grid-cols-3 gap-0 mx-1 -mt-12 lg:-mt-4 md:-mt-4 sm:-mt-8 justify-center h-15">
                     <div className="inline-flex flex-col justify-start items-end mr-0 flex-shrink-0 w-auto h-auto my-auto">
                         {leftLabels.map((label, i) => (
-                            <div key={i} className="text-right" style={{ color: label.color }}>
-                                <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Sector}:</span> <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Value}%</span>
+                            <div key={i} className="text-right my-0 leading-3" style={{ color: label.color }}>
+                                <span className="flex-nowrap text-sm my-0 sm:text-base md:text-lg lg:text-2xl font-bold leading-3 sm:leading-tight md:leading-normal">{label.Sector}: {label.Value}%</span>
                             </div>
                         ))}
                     </div>
@@ -92,8 +92,8 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
                     </div>
                     <div className="inline-flex flex-col justify-start items-start ml-2 flex-shrink-0 w-auto my-auto">
                         {rightLabels.map((label, i) => (
-                            <div key={i} className="text-left" style={{ color: label.color, fontWeight: 'bold' }}>
-                                <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Sector}:</span> <span className="text-xs sm:text-sm md:text-base lg:text-2xl font-bold">{label.Value}%</span>
+                            <div key={i} className="text-left my-0 leading-3" style={{ color: label.color, fontWeight: 'bold' }}>
+                                <span className=" flex-nowrap text-sm my-0 sm:text-base md:text-lg lg:text-2xl font-bold leading-3 sm:leading-tight md:leading-normal">{label.Sector}: {label.Value}%</span>
                             </div>
                         ))}
                     </div>
