@@ -169,7 +169,7 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         transition={{ duration: 6, delay: 1.5, type: "spring" }}
                         d={result}
                         fill="none"
-                        className="stroke-blue-500"
+                        stroke="currentColor"
                     />
                 )}
 
@@ -191,15 +191,14 @@ const AreaGraph2 = ({ height, width, dates, values, data }) => {
                         r="1"
                         cx={xScale(d[0])}
                         cy={yScale(d[1])}
-                        //className="fill-blue-900"
-                        className={eachYearOfInterval({ start: startOfYear(data.at(0)[0]), end: endOfYear(data.at(-1)[0]) }).findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? 'stroke-[#F0F4FF] fill-blue-600 stroke-[0.4px]' : 'stroke-white fill-blue-600 stroke-[0.4px]'}
-                        stroke='0.1px'
+                        className="fill-current stroke-[0.5px]"
+                        stroke={eachYearOfInterval({ start: startOfYear(data.at(0)[0]), end: endOfYear(data.at(-1)[0]) }).findIndex(y => isSameYear(y, d[0])) % 2 === 1 ? '#F0F4FF' : 'white'}
                     />
                 ))}
             </svg>
             {tooltipVisible && (
                 <motion.div
-                    className="absolute p-1 text-lg sm:text-base md:text-xl lg:text-2xl text-blue-500 border-solid border-1 border-blue-900 bg-white rounded pointer-events-none"
+                    className="absolute p-1 text-base sm:text-base md:text-xl lg:text-2xl text-blue-500 border-solid border-1 border-blue-900 bg-white rounded pointer-events-none"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.9 }}
                     transition={{ type: 'spring', bounce: 0.5, duration: 0.5 }}

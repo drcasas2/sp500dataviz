@@ -37,11 +37,11 @@ const PieChart3 = ({ height, width, yearlySectorWeights, year }) => {
     return (
         <>
             {findYearData ? (
-                <div className="grid grid-cols-3 gap-0 mx-1 -mt-3 lg:-mt-4 md:-mt-4 sm:-mt-8 justify-center h-140 py-4">
+                <div className="grid grid-cols-3 gap-0 mx-1 -mt-12 lg:-mt-4 md:-mt-4 sm:-mt-8 justify-center h-15">
                     <div className="inline-flex flex-col justify-start items-end mr-0 flex-shrink-0 w-auto h-auto my-auto">
                         {leftLabels.map((label, i) => (
                             <div key={i} className="text-right my-0 leading-3" style={{ color: label.color }}>
-                                <span className="flex-nowrap text-sm my-0 sm:text-base md:text-lg lg:text-2xl font-bold leading-tight sm:leading-tight md:leading-normal">{label.Sector}: {label.Value}%</span>
+                                <span className="flex-nowrap text-sm my-0 sm:text-base md:text-lg lg:text-2xl font-bold leading-3 sm:leading-tight md:leading-normal">{label.Sector}: {label.Value}%</span>
                             </div>
                         ))}
                     </div>
