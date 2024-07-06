@@ -79,13 +79,13 @@ const BarChart = ({ height, width, barData }) => {
                         ))}
 
                         {/* Trying to create the bars to draw on the graph. This is completely wrong so far, but I will work on this */}
-                        {barData.map((d, i) => (
+                        {/* {barData.map((d, i) => (
                             <g key={i} transform={`translate(${xScale(d.RoR) + xScale.bandwidth()}, ${yScale(d.year)})`}>
                                 <rect>
 
                                 </rect>
                             </g>
-                        ))}
+                        ))} */}
                 </g>
                 )}
             </svg>
