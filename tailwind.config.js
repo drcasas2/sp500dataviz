@@ -19,7 +19,19 @@ export default {
         "5xl": "3rem",
         "6xl": "4rem",
       },
+      strokeDasharray: {
+        '2-4': '2,4',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.stroke-dasharray-2-4': {
+          strokeDasharray: '2, 4',
+        },
+      };
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    },
+  ],
 }
