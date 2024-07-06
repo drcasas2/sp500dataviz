@@ -7,6 +7,7 @@ const apiKey = '58e9634c43c04daaa1cd52796aa74f7aef';
 //const monthlyData = 'TIME_SERIES_MONTHLY_ADJUSTED';
 const stockTicker = 'SPY';
 const monthlyInterval = '1month';
+const yearlyInterval = '1year';
 const weeklyInterval = '1week';
 const dailyInterval = '1day';
 
@@ -467,7 +468,7 @@ const API = {
             console.error('Error fetching data:', error);
             throw error; // Rethrow the error for handling in the calling code if needed
         }
-    }
+    },
 };
 
 export default API;
