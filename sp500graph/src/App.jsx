@@ -161,10 +161,10 @@ export default function App() {
                                     ease: [0, 0.71, 0.2, 1.01]
                                 }}
                             >
-                                <PieChart3 className='-mt-40 border-solid border-slate-900 border-2' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
+                                <PieChart3 className='-mt-40' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
                             </motion.div>
                             <motion.div>
-                              <BarChart className='mt-40 border-solid border-slate-900 border-2' height={bounds.height} width={bounds.width} barData={barData}/>
+                              <BarChart className='mt-40' height={bounds.height} width={bounds.width} barData={barData}/>
                             </motion.div>
                         </>
                         )

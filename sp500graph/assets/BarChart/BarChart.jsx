@@ -42,7 +42,7 @@ const BarChart = ({ height, width, barData }) => {
         <>
             <svg
             viewBox={`0 0 ${width} ${height}`}
-            className='border-solid border-slate-900 border-2'
+            className=''
             >
                 {/* Setting the start drawing within the graph's margins, and ensuring data is available to display in the visualization */}
                 {hasData && (
