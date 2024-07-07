@@ -56,7 +56,7 @@ const BarChart = ({ height, width, barData }) => {
                                     y={0}
                                     dy="0.32em"
                                     textAnchor="end"
-                                    className='text-sm'
+                                    className='text-sm text-gray-600 fill-gray-600'
                                 >
                                     {`${d}%`}
                                 </text>
@@ -65,17 +65,24 @@ const BarChart = ({ height, width, barData }) => {
                         {/* Creating the Bars on the Bar Chart */}
                         {barData.map((d, i) => (
                             <g key = {i}>
-                                <rect
+                                <motion.rect
                                     x={xScale(d.year)}
                                     y={yScale(Math.max(0, d.RoR))}  // Ensure y is positive for negative values
                                     width={xScale.bandwidth()}
                                     height={Math.abs(yScale(d.RoR) - yScale(0))}  // Calculate height from zero line
-                                    className="fill-sky-500 pointer-events-none"
+                                    className="fill-sky-500"
+                                    initial={{ cy: yScale(0), scale: 0 }}
+                                    animate={{ cy: yScale(d.RoR), scale: 1 }}
+                                    transition={{ type: "spring", duration: 1, delay: 0.006 * i }}
+                                    key={i}
+                                    r="1"
+                                    cx={xScale(d.year)}
+                                    cy={yScale(d.RoR)}
                                 />
                                 {/* I need to work on how to center the text within each of the bars in the bar chart without spreading out the text if the bar width gets wider as the screen gets wider */}
                                 <g>
                                     <text
-                                        className='text-[3px] mx-[4px] sm:text-sm lg:text-lg xl:text-xl stroke-white stroke-[0.8] backdrop-invert'
+                                        className='text-[3px] mx-[4px] sm:text-sm lg:text-lg xl:text-xl stroke-sky-50 stroke-[0.8] backdrop-invert'
                                         x={xScale(d.year)}
                                         y={yScale(d.RoR)}  // Ensure y is positive for negative values
                                         dy = {yScale(d.RoR) >= 160 ? '-2' : '8'}
