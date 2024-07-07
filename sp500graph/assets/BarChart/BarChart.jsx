@@ -82,7 +82,7 @@ const BarChart = ({ height, width, barData }) => {
                                 {/* I need to work on how to center the text within each of the bars in the bar chart without spreading out the text if the bar width gets wider as the screen gets wider */}
                                 <g>
                                     <text
-                                        className='text-[3px] mx-[4px] sm:text-sm lg:text-lg xl:text-xl stroke-sky-50 stroke-[0.8] backdrop-invert'
+                                        className='text-[3px] mx-[4px] sm:text-[4px] lg:text-sm xl:text-lg stroke-sky-50 stroke-[0.5] sm:stroke-[0.8] backdrop-invert'
                                         x={xScale(d.year)}
                                         y={yScale(d.RoR)}  // Ensure y is positive for negative values
                                         dy = {yScale(d.RoR) >= 160 ? '-2' : '8'}
