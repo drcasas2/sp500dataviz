@@ -73,7 +73,7 @@ const BarChart = ({ height, width, barData }) => {
                                 <g key = {i}>
                                     <motion.rect
                                         x={xScale(d.year)}
-                                        y={yScale(Math.max(0, d.RoR))}  // Ensure y is positive for negative values
+                                        y={d.RoR >= 0 ? yScale(Math.max(0, d.RoR)) : height - margin.bottom - yScale(0)}  // Ensure y is positive for negative values
                                         width={xScale.bandwidth()}
                                         height={Math.abs(yScale(d.RoR) - yScale(0))}  // Calculate height from zero line
                                         className="stroke-blue-950 stroke-[0.5]"
@@ -87,14 +87,13 @@ const BarChart = ({ height, width, barData }) => {
                                         cy={yScale(d.RoR)}
                                     />
                                     {/* I need to work on how to center the text within each of the bars in the bar chart without spreading out the text if the bar width gets wider as the screen gets wider */}
-                                    <g >
+                                    <g className=''>
                                         <text
-                                            className='text-[3px] mx-[4px] sm:text-[4px] lg:text-sm xl:text-lg stroke-sky-50 stroke-[0.5] sm:stroke-[0.4] backdrop-invert'
-                                            x={xScale(d.year)}
-                                            y={yScale(d.RoR)}  // Ensure y is positive for negative values
-                                            dy = {yScale(d.RoR) >= 160 ? '-2' : '8'}
-                                            textLength= {xScale.bandwidth()}
-                                            lengthAdjust= 'spacing'
+                                            className='text-[3px] mx-[4px] sm:text-sm lg:text-lg xl:text-lg stroke-sky-50 fill-sky-50 stroke-[0.3] sm:stroke-[0.4] backdrop-invert'
+                                            x={xScale(d.year) + xScale.bandwidth()/2}
+                                            y={d.RoR >= 0 ? yScale(d.RoR) : yScale(Math.min(0, d.RoR))}  // Ensure y is positive for negative values
+                                            dy = {d.RoR >= 0 ? (width <= '500px' ? '4' : '6') : '-3'}
+                                            textAnchor="middle"
                                         >
                                         {`${Math.round(d.RoR * 10) / 10}%`}
                                         </text>
