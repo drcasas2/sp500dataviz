@@ -22,6 +22,8 @@ export default function App() {
     const [barDates, setBarDates] = useState([]);
     const [barValues, setBarValues] = useState([]);
     const [barData, setBarData] = useState([]);
+    const [avgYearlyReturn, setAvgYearlyReturn] = useState(0);
+    const [roRDataNumberOfYears, setRoRDataNumberOfYears] = useState(0);
 
     const fetchMonthlyData = async () => {
         const fetchedData = await API.fetchMonthlyData();
@@ -56,12 +58,12 @@ export default function App() {
         let janClose;
 
         sortedData.forEach(d => {
-            if (!d[0]) { // Changed d[0] to d.Date to correctly reference the date field
+            if (!d[0]) {
                 console.error("Missing date in data:", d);
                 return;
             }
 
-            const date = d[0]; // Changed d[0] to d.Date to correctly reference the date field
+            const date = d[0];
 
             const value = d[1];
 
@@ -86,7 +88,13 @@ export default function App() {
             }
         });
 
-        console.table(yearlyRoRData);
+        const totalRoR = yearlyRoRData.reduce((sum, d) => sum + d.RoR, 0);
+        const avgRoR = totalRoR / yearlyRoRData.length;
+
+        setRoRDataNumberOfYears(yearlyRoRData.length);
+        setAvgYearlyReturn(avgRoR);
+        console.log(avgYearlyReturn.toString());
+        
 
         setBarData(yearlyRoRData);
         setBarDates(yearlyRoRData.year); // Extract unique years from yearlyData keys
@@ -99,7 +107,7 @@ export default function App() {
     };
 
     useEffect(() => {
-        fetchMonthlyData().then(() => fetchYearlySectorWeights()).then(() => fetchYearlyReturns()); // Correct chaining of async functions
+        fetchMonthlyData().then(() => fetchYearlySectorWeights()).then(() => fetchYearlyReturns()); // Chain async functions
     }, []);
 
     useEffect(() => {
@@ -112,21 +120,28 @@ export default function App() {
         <MantineProvider>  
             <>
                 <motion.h1
-                    className='text-center text-2xl font-extrabold font-sans text-blue-500 mt-3'
+                    className='text-center text-3xl font-extrabold font-sans text-blue-700 mt-3'
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 4, delay: 0.5, type: "spring" }}
                 >
                     S&P 500 Data (1993 - 2024)
                 </motion.h1>
-                <div className="my-2 mx-2 h-80 w-full items-center justify-center text-blue-500" ref={ref}>
+                <motion.h3
+                    className='text-blue-600 -mt-1 text-sm text-center font-bold'
+                >
+                    All visualized data is using SPDR S&P 500 ERF Trust (SPY)
+                </motion.h3>
+                <div className="my-2 mx-2 h-80 w-full items-center justify-center text-blue-600" ref={ref}>
                     { loading ? (
-                        <h1 className="w-full text-2xl text-center items-center justify-center">Loading...</h1>
+                        <h2 className="w-full text-3xl text-center items-center justify-center  mx-auto">
+                            Loading...
+                        </h2>
                     ) : (
                         bounds.width > 0 &&(
                         <>
                             <motion.div
-                                className="box"
+                                className="h-auto w-auto mx-auto rounded overflow-hidden shadow-lg my-4"
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{
@@ -135,36 +150,49 @@ export default function App() {
                                     ease: [0, 0.71, 0.2, 1.01]
                                 }}
                             >
+                                <h2 className='text-center font-bold text-xl'>
+                                    Monthly Closing Values Over 32 Years
+                                </h2>
                                 <AreaGraph2 className='mb-2' height={bounds.height} width={bounds.width} dates={dates} values={values} data={data}/>
                             </motion.div>
                             <motion.div
-                                className="m-0"
-                                width='100%'
-                                initial={{ opacity: 0, scale: 0.5 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{
-                                    duration: 0.8,
-                                    delay: 0,
-                                    ease: [0, 0.71, 0.2, 1.01]
-                                }}
-                            >
-                                <SliderInput value={year} onChange={setYear} className="mt-2 mx-4 text-blue-500" min={yearlySectorWeights[0].Year} max={yearlySectorWeights[yearlySectorWeights.length - 1].Year}/>
+                                className="w-4/5 rounded overflow-hidden shadow-md mx-auto my-6"
+                                >
+                                <h1 className='text-center font-bold text-xl'>Yearly Sector Weighting</h1>
+                                <motion.div
+                                    className="-mb-20 mt-3 md:-mb-10"
+                                    width='100%'
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{
+                                        duration: 0.8,
+                                        delay: 0,
+                                        ease: [0, 0.71, 0.2, 1.01]
+                                    }}
+                                >
+                                    <SliderInput value={year} onChange={setYear} className="mt-2 mx-4 text-blue-500" min={yearlySectorWeights[0].Year} max={yearlySectorWeights[yearlySectorWeights.length - 1].Year}/>
+                                </motion.div>
+                                <motion.div
+                                    className=""
+                                    width='100%'
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{
+                                        duration: 0.8,
+                                        delay: 0,
+                                        ease: [0, 0.71, 0.2, 1.01]
+                                    }}
+                                >
+                                    <PieChart3 className='' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
+                                </motion.div>
                             </motion.div>
-                            <motion.div
-                                className="m-0"
-                                width='100%'
-                                initial={{ opacity: 0, scale: 0.5 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{
-                                    duration: 0.8,
-                                    delay: 0,
-                                    ease: [0, 0.71, 0.2, 1.01]
-                                }}
-                            >
-                                <PieChart3 className='-mt-40' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
-                            </motion.div>
-                            <motion.div>
-                              <BarChart className='mt-40' height={bounds.height} width={bounds.width} barData={barData}/>
+                            <motion.div className='h-max w-3/4 mx-auto rounded overflow-hidden shadow-lg'>
+                                <h2 className='text-center font-bold text-xl'>Average Annual Return</h2>
+                                <div className='text-2xl font-bold font-sans flex flex-row flex-wrap border-solid border-[1px] border-blue-600 rounded absolute right-0 w-1/4 mb-20 divide-solid divide-y-2 divide-blue-700 m-auto'>
+                                    <h3 className="mr-2 ">Average Yearly Return For {roRDataNumberOfYears} Years </h3>
+                                    <h3 className=''> {avgYearlyReturn}</h3>
+                                </div>
+                                 <BarChart className='my-20' height={bounds.height*1.5} width={bounds.width} barData={barData} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>
                         </>
                         )
