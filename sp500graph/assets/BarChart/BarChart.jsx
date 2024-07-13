@@ -90,10 +90,10 @@ const BarChart = ({ height, width, barData, avgYearlyReturn }) => {
                                         {/* I need to work on how to center the text within each of the bars in the bar chart without spreading out the text if the bar width gets wider as the screen gets wider */}
                                         <g className=''>
                                             <text
-                                                className='text-[2px] mx-[4px] sm:text-[5px] lg:text-lg xl:text-lg stroke-sky-50 fill-sky-50 stroke-[0.3] sm:stroke-[0.4] backdrop-invert'
+                                                className='text-[3.5px] mx-[4px] sm:text-[10px] lg:text-lg xl:text-lg stroke-sky-50 fill-sky-50 stroke-[0.3] sm:stroke-[0.4] backdrop-invert'
                                                 x={xScale(d.year) + xScale.bandwidth()/2}
                                                 y={d.RoR >= 0 ? yScale(d.RoR) : yScale(Math.min(0, d.RoR))}  // Ensure y is positive for negative values
-                                                dy = {d.RoR >= 0 ? (width <= '500px' ? '4' : '6') : '-3'}
+                                                dy = {d.RoR >= 0 ? (width <= '500px' ? '4' : '10') : '-4'}
                                                 textAnchor="middle"
                                             >
                                             {`${Math.round(d.RoR * 10) / 10}%`}
@@ -110,7 +110,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn }) => {
                                             <text
                                                 y="10"
                                                 textAnchor="middle"
-                                                className='text-[5px] mx-[4px] sm:text-sm lg:text-lg xl:text-xl stroke-blue-800 stroke-[0.3] backdrop-invert'
+                                                className='text-[3.5px] mx-[5px] sm:text-[10px] lg:text-lg xl:text-xl stroke-blue-800 stroke-[0.3] backdrop-invert'
                                             >
                                                 {d}
                                             </text>
