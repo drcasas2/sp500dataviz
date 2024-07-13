@@ -186,11 +186,11 @@ export default function App() {
                                     <PieChart3 className='' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
                                 </motion.div>
                             </motion.div>
-                            <motion.div className='h-max w-3/4 mx-auto rounded overflow-hidden shadow-lg'>
-                                <h2 className='text-center font-bold text-xl'>Average Annual Return</h2>
-                                <div className='text-2xl font-bold font-sans flex flex-row flex-wrap border-solid border-[1px] border-blue-600 rounded absolute right-0 w-1/4 mb-20 divide-solid divide-y-2 divide-blue-700 m-auto'>
-                                    <h3 className="mr-2 ">Average Yearly Return For {roRDataNumberOfYears} Years </h3>
-                                    <h3 className=''> {avgYearlyReturn}</h3>
+                            <motion.div className='relative h-max w-2/3 mx-auto rounded overflow-hidden shadow-lg'>
+                                <h2 className='text-center font-bold text-xl mb-5'>Average Annual Return</h2>
+                                <div className='absolute bg-slate-200 left-2/3 top-0 font-bold font-sans flex flex-column flex-wrap rounded divide-solid divide-x-2 divide-blue-700 w-auto h-18 px-auto m-0'>
+                                    <h3 className="relative mx-auto px-3 py-4 my-auto text-left text-[0.9rem] text-center w-auto h-auto">Average Yearly Return For {roRDataNumberOfYears} Years</h3>
+                                    <h3 className='relative text-nowrap px-2 my-auto w-auto text-[1.3rem] font-bold h-auto'>{Math.round(avgYearlyReturn * 1000)/1000}%</h3>
                                 </div>
                                  <BarChart className='my-20' height={bounds.height*1.5} width={bounds.width} barData={barData} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>
