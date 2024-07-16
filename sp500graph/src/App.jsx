@@ -188,9 +188,9 @@ export default function App() {
                             </motion.div>
                             <motion.div className='relative h-max w-2/3 mx-auto rounded overflow-hidden shadow-lg'>
                                 <h2 className='text-center font-bold text-xl mb-5'>Average Annual Return</h2>
-                                <div className='absolute bg-slate-200 left-2/3 top-0 font-bold font-sans flex flex-column flex-wrap rounded divide-solid divide-y-2 divide-blue-700 w-auto h-18 px-auto m-0 lg:w-3/10 lg:h-16 lg:divide-x-2 lg:divide-y-0 sm:h-16 sm:w-3/12'>
-                                    <h3 className="relative mx-auto px-3 py-4 my-auto text-left text-[0.9rem] text-center min-w-30 w-auto h-auto lg:w-1/2 lg:py-0 lg:px-0 sm:text-[0.63rem] sm:pb-0 sm:pt-1 sm:px-1">Average Yearly Return For {roRDataNumberOfYears} Years</h3>
-                                    <h3 className='relative text-nowrap px-2 my-auto w-auto text-[1.3rem] font-bold h-auto mx-auto sm:text-[1.1rem]'>{Math.round(avgYearlyReturn * 1000)/1000}%</h3>
+                                <div className='absolute bg-slate-200 min-h-14 left-3/4 top-0 font-bold font-sans flex flex-column flex-wrap rounded divide-solid divide-y-2 divide-blue-700 w-4/12 h-16 px-auto mx-auto lg:flex-column lg:flex-nowrap lg:left-2/3 lg:mx-auto lg:w-4/12 lg:h-18 lg:divide-x-2 lg:divide-y-0 md:divide-x-0 md:divide-y-2 sm:h-16 sm:w-3/12 sm:left-3/4'>
+                                    <h3 className="relative mx-auto min-w-14 px-3 py-0 my-auto text-left text-[0.63rem] text-center min-w-30 w-auto h-auto sm:min-w-[7.09rem] sm:mx-2 sm:px-1 lg:w-1/2 lg:py-0 lg:px-1 lg:text-[0.9rem] sm:text-[0.65rem] sm:pb-0 sm:pt-1 sm:px-1">Average Yearly Return For {roRDataNumberOfYears} Years</h3>
+                                    <h3 className='relative text-nowrap text-center px-2 pl-4 my-auto w-auto text-[1.1rem] font-bold font-lato h-auto mx-auto sm:text-[1.15rem] lg:text-[1.9rem]'>{Math.round(avgYearlyReturn * 1000)/1000}%</h3>
                                 </div>
                                  <BarChart className='my-20' height={bounds.height*1.5} width={bounds.width} barData={barData} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>

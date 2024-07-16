@@ -28,6 +28,11 @@ export default {
       strokeDasharray: {
         '2-4': '2,4',
       },
+      fontFamily:{
+        'roboto':['Roboto', 'sans-serif'],
+        'lato':["Lato", 'sans-serif'],
+        'opensans':['Open Sans', 'sans-serif'],
+      },
     },
   },
   plugins: [
