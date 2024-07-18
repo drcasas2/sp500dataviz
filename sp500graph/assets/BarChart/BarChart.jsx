@@ -35,26 +35,25 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
         if(hasData) {
             const calculateAnnualROI = (initialInvestment, yearlyInvestment) => {
                 const calculatedYearlyReturn = barData.reduce((accumulator, currentBarData, currentIndex, array) => {
-                    const previousValue = currentIndex > 0 ? Number(accumulator.iterationResults[currentIndex - 1].currentYearReturn) : Number(initialInvestment); // determines the previous iteration's value. If it is the first iteration (currentIndex == 0), it sets 'previousValue' to the initialInvestment input to start your calculation, otherwise it gets the value from the iterationResults array at the previous index.
-                    const calculation = ((yearlyInvestment*(1+(currentBarData.RoR/100))) + previousValue); //Calculates Your Return based on your Yearly Investment
-        
-                    accumulator.iterationResults.push({year: currentBarData.year, currentYearReturn: calculation}); // Pushes the current calculation into an array
-                    accumulator.finalValue = calculation; // Keeps updating the finalValue during each iteration of the reduce function until the final iteration gives the finalValue.
-        
-                    console.log(typeof previousValue);
+                    const previousValue = currentIndex > 0 ? Number(accumulator.iterationResults[currentIndex - 1].currentYearReturn) : Number(initialInvestment); // Use previous year's return if not the first year
+                    const calculation = currentIndex > 0 ? ((Number(yearlyInvestment) + Number(previousValue)) * (1 + (currentBarData.RoR / 100))) : (Number(previousValue) * (1 + (currentBarData.RoR / 100))); // Calculate current year's return
+                    console.log(currentBarData.RoR/100);
+                    console.log(previousValue);
                     console.log(calculation);
-        
-                    return accumulator; // Returns the accumulator object.
+                    accumulator.iterationResults.push({ year: currentBarData.year, currentYearReturn: calculation }); // Push the current calculation into an array
+                    accumulator.finalValue = calculation; // Keep updating the finalValue
+    
+                    return accumulator; // Return the accumulator object
                 },{
                     iterationResults: [],
                     finalValue: 0
-                }
-                );
+                });
                 return calculatedYearlyReturn;
             };
             setAnnualROI(calculateAnnualROI(initialInvestment, yearlyInvestment));
         }
     }, [initialInvestment, yearlyInvestment, barData]);
+    
 
     console.log(barData);
 
