@@ -21,6 +21,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
     );
 
     const [annualROI, setAnnualROI] = useState({});
+    const [hidden, setHidden] = useState(true);
 
     // Gets the Initial Investment Value and Yearly Investment Value that the user previously inputted,
     // and saves it to local storage under the name 'yearlyInvestmentInput' or 'initialInvestmentInput'
@@ -48,6 +49,15 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                     iterationResults: [],
                     finalValue: 0
                 });
+
+                // Format currentYearReturn values
+                calculatedYearlyReturn.iterationResults = calculatedYearlyReturn.iterationResults.map(iterationResult => ({
+                    ...iterationResult,
+                    currentYearReturnFormatted: iterationResult.currentYearReturn.toLocaleString()
+                }));
+
+                console.log(calculatedYearlyReturn);
+
                 return calculatedYearlyReturn;
             };
             setAnnualROI(calculateAnnualROI(initialInvestment, yearlyInvestment));
@@ -56,6 +66,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
     
 
     console.log(barData);
+    console.log(annualROI.iterationResults);
 
     const handleInitialInvestment = (event) => {
         setInitialInvestment(event.target.value);
@@ -96,7 +107,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
     console.log('xScale(d.RoR)' + barData.map( (d, i) => `Key: ${i} - (${xScale(d.year)}, ${yScale(d.RoR)})`));
     // console.log('xScale.bandwidth(): ' + xScale.bandwidth())
 
-    
+    const finalValueWCommas = annualROI?.finalValue ? annualROI.finalValue.toLocaleString() : 'N/A';
 
     return (
         <>
@@ -110,7 +121,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                 <h3 className='relative text-nowrap text-center px-2 pl-4 my-auto w-auto text-[1.1rem] font-bold font-lato h-auto mx-auto sm:text-[1.15rem] lg:text-[1.9rem]'>{Math.round(avgYearlyReturn * 1000)/1000}%</h3>
             </div>
             <div className='absolute bg-slate-200 min-h-14 left-3/4 top-1/4 font-bold font-sans flex flex-column flex-wrap rounded divide-solid divide-y-2 divide-blue-700 w-4/12 h-16 px-auto mx-auto lg:flex-column lg:flex-nowrap lg:left-2/3 lg:mx-auto lg:w-4/12 lg:h-18 lg:divide-x-2 lg:divide-y-0 md:divide-x-0 md:divide-y-2 sm:h-16 sm:w-3/12 sm:left-3/4'>
-                Your Final Return after {roRDataNumberOfYears} Years is ${annualROI.finalValue}
+                Your Final Return after {roRDataNumberOfYears} Years is ${finalValueWCommas}
             </div>
             <svg
             viewBox={`0 0 ${width} ${height}`}
@@ -162,7 +173,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                                     {/* I need to work on how to center the text within each of the bars in the bar chart without spreading out the text if the bar width gets wider as the screen gets wider */}
                                     <g className=''>
                                         <text
-                                            className='text-[3.5px] mx-[4px] sm:text-[10px] lg:text-lg xl:text-lg stroke-sky-50 fill-sky-50 stroke-[0.3] sm:stroke-[0.4] backdrop-invert'
+                                            className='text-[3.5px] mx-[4px] sm:text-[4px] lg:text-lg xl:text-lg stroke-sky-50 fill-sky-50 stroke-[0.3] sm:stroke-[0.4] backdrop-invert'
                                             x={xScale(d.year) + xScale.bandwidth()/2}
                                             y={d.RoR >= 0 ? yScale(d.RoR) : yScale(Math.min(0, d.RoR))}  // Ensure y is positive for negative values
                                             dy = {d.RoR >= 0 ? (width <= '500px' ? '4px' : '10px') : '-4px'} //When the screen width is small, it adjusts the location of the text inside each of the bars.
@@ -171,6 +182,18 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                                         {`${Math.round(d.RoR * 10) / 10}%`}
                                         </text>
                                     </g>
+                                    {/* <rect
+                                        onMouseEnter={() => {
+                                            console.log('MouseEnter Detected')
+                                            setHidden(false)
+                                        }}
+                                        onMouseLeave={() => setHidden(true)}
+                                        className={hidden ? "hidden" : "visible fill-slate-400"}
+                                        x={xScale(d.year)}
+                                        y={d.RoR >= 0 ? yScale(Math.max(0, d.RoR)) : height - margin.bottom - yScale(0)}
+                                        width={xScale.bandwidth()}
+                                        height={Math.abs(yScale(height - 0))}
+                                    /> */}
                                 </g>
                             ))}
                             {/* X-Axis & X-Axis Ticks & Text */}
@@ -182,7 +205,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                                         <text
                                             y="10"
                                             textAnchor="middle"
-                                            className='text-[3.5px] mx-[5px] sm:text-[10px] lg:text-lg xl:text-xl stroke-blue-800 stroke-[0.3] backdrop-invert'
+                                            className='text-[3.5px] mx-[5px] sm:text-[6.3px] lg:text-lg xl:text-xl stroke-blue-800 stroke-[0.3] backdrop-invert'
                                         >
                                             {d}
                                         </text>
