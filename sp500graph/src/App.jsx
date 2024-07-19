@@ -139,7 +139,7 @@ export default function App() {
                 <motion.h3
                     className='text-blue-600 -mt-1 text-sm text-center font-bold'
                 >
-                    All visualized data is using SPDR S&P 500 ERF Trust (SPY)
+                    All visualized data is using SPDR S&P 500 ETF Trust (SPY)
                 </motion.h3>
                 <div className="my-2 mx-2 h-80 w-full items-center justify-center text-blue-600" ref={ref}>
                     { loading ? (
