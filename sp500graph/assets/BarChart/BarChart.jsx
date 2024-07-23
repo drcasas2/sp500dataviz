@@ -153,18 +153,18 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
     return (
         <>
             <div className="flex flex-col">
-                <h2 className='text-center font-bold w-1/2 text-2xl mb-5 mx-auto px-0'>Average Annual Return</h2>
-                <div className="flex flex-nowrap my-2 justify-between h-auto w-auto">
+                <h2 className='text-center font-bold w-1/2 text-2xl my-2 mx-auto px-0'>Average Annual Return</h2>
+                <div className="flex flex-nowrap my-0 justify-between h-auto w-auto">
                     <div className="flex flex-col items-center px-1 mx-1 w-auto float-start justify-center w-1/2">
                             <NumInputField className="relative" label="Initial Investment (in USD)" value={initialInvestment} onInput={handleInitialInvestment} />
                             <NumInputField className="relative" label="Yearly Investment (in USD)" value={yearlyInvestment} onInput={handleYearlyInvestment} />
                     </div>
-                    <div className="flex flex-col items-end justify-between px-1 my-1 h-auto w-auto">
+                    <div className="flex flex-col items-end justify-between px-1 my-1 h-auto w-1/2">
                         <div className='bg-slate-200 min-h-14 font-bold font-sans flex flex-column flex-wrap rounded divide-solid divide-y-2 divide-blue-700 w-auto h-auto px-auto mx-0 my-2 sm:h-16 sm:w-3/4 sm:px-0 md:divide-x-0 md:divide-y-2 md:w-3/4 md:text-[0.9rem] md:justify-center lg:flex-column lg:flex-nowrap lg:mx-0 lg:w-2/3 lg:h-18 lg:divide-x-2 lg:divide-y-0'>
                             <h3 className="mx-auto px-auto py-2 my-auto text-[0.63rem] text-center items-center w-auto h-auto sm:min-w-[7.09rem] sm:mx-2 sm:px-1 sm:text-[0.65rem] sm:pb-0 sm:pt-1 sm:px-0 md:w-auto md:text-[0.73rem] md:px-auto lg:w-1/3 lg:py-0 lg:px-1 lg:text-[0.9rem]">Average Yearly Return For {roRDataNumberOfYears} Years</h3>
                             <h3 className='text-nowrap text-center px-auto my-auto w-auto text-[1.1rem] font-bold font-lato h-auto mx-auto sm:text-[1.15rem] sm:text-center lg:text-[1.9rem] lg:pl-4'>{Math.round(avgYearlyReturn * 1000)/1000}%</h3>
                         </div>
-                        <div className='text-[0.63rem] bg-slate-200 min-h-14 font-bold font-sans flex flex-wrap rounded w-auto h-auto px-2 py-auto mx-0 my-2 items-center justify-center text-center sm:h-auto sm:w-3/4 sm:text-[0.7rem] sm:top-[4.5rem] md:w-3/4 md:text-[0.9rem] lg:flex-column lg:flex-nowrap lg:mx-0 lg:w-2/3 lg:h-18 lg:text-center lg:px-auto lg:text-[1rem]'>
+                        <div className='text-[0.63rem] bg-slate-200 min-h-14 font-bold font-sans flex flex-wrap rounded w-auto h-auto px-2 py-auto mx-0 my-2 items-center justify-center text-center text-wrap sm:h-auto sm:w-3/4 sm:text-[0.7rem] sm:top-[4.5rem] md:w-3/4 md:text-[0.9rem] lg:flex-column lg:flex-nowrap lg:mx-0 lg:w-2/3 lg:h-18 lg:text-center lg:px-auto lg:text-[1rem]'>
                             Your Final Return after {roRDataNumberOfYears} Years is ${finalValueWCommas}
                         </div>
                     </div>
