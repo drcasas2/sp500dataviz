@@ -4,11 +4,16 @@ import { motion } from "framer-motion";
 import NumInputField from '../NumInputField/NumInputField.jsx';
 
 const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYears }) => {
+    const tooltipRef = useRef();
     const margin = { top: 20, right: 20, bottom: 15, left: 35 };
     const graphWidth = width - margin.left - margin.right;
     const graphHeight = height - margin.top - margin.bottom;
     const isValidData = Array.isArray(barData) && barData.every(d => typeof d.year === 'string' && typeof d.RoR === 'number');
     const hasData = isValidData && barData.length > 0;
+    const [xPos, setXPos] = useState(0);
+    const [yPos, setYPos] = useState(0);
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+    const [tooltipContent, setTooltipContent] = useState("");
 
     // Gets the Initial Investment Value that was saved in local storage under the memory location 'initialInvestmentInput, or defaults to 0'
     const [initialInvestment, setInitialInvestment] = useState(
@@ -65,8 +70,8 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
     }, [initialInvestment, yearlyInvestment, barData]);
     
 
-    console.log(barData);
-    console.log(annualROI.iterationResults);
+    //console.log(barData);
+    //console.log(annualROI.iterationResults);
 
     const handleInitialInvestment = (event) => {
         setInitialInvestment(event.target.value);
@@ -76,11 +81,8 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
         setYearlyInvestment(event.target.value);
     };
 
-    const handleHover = (event) => {
-        
-    }
-
-    console.log(annualROI);
+    //console.log(annualROI);
+    //console.log(barData);
 
     // Creating the X-Axis Scale
 
@@ -90,7 +92,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
         .paddingInner(0.3)
         .paddingOuter(0.3);
 
-    console.log(d3.extent(barData, d => d.RoR))
+    //console.log(d3.extent(barData, d => d.RoR))
 
     // Creating the Y-Axis Scale
 
@@ -104,8 +106,47 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
     // console.log("yScale domain:", yScale.domain());
     // console.log("yScale range:", yScale.range());
     // console.log("yScale(0):", yScale(0));
-    console.log('xScale(d.RoR)' + barData.map( (d, i) => `Key: ${i} - (${xScale(d.year)}, ${yScale(d.RoR)})`));
+    //console.log('xScale(d.RoR)' + barData.map( (d, i) => `Key: ${i} - (${xScale(d.year)}, ${yScale(d.RoR)})`));
     // console.log('xScale.bandwidth(): ' + xScale.bandwidth())
+
+    const handleMouseMove = (event) => {
+        if (!hasData) return;
+
+        const { clientX, clientY } = event;
+        const svgRect = event.target.getBoundingClientRect();
+        const mouseX = clientX - svgRect.left - margin.left - margin.right;
+        const mouseY = clientY - svgRect.top - margin.top;
+
+        setXPos(mouseX);
+        setYPos(mouseY);
+
+        let nearestDataPoint = null;
+        let minDistance = Infinity;
+
+        annualROI.iterationResults.forEach((d) => {
+            const dist = Math.abs(xScale(d.year) + (xScale.bandwidth()/2) - mouseX);
+            console.log(`svgRect : ${svgRect.left}, clientX : ${clientX} , d.year : ${d.year}, xScale(d.year) : ${xScale(d.year)}, xScale.bandwidth() : ${xScale.bandwidth()}`);
+            if (dist < minDistance) {
+                minDistance = dist;
+                nearestDataPoint = d;
+            }
+        });
+
+        if (nearestDataPoint) {
+            setXPos((xScale(nearestDataPoint.year) - xScale.bandwidth()/2 + margin.left));
+            //setYPos(yScale(nearestDataPoint[1]));
+            setTooltipContent(`Your RoR in ${nearestDataPoint.year}: ${nearestDataPoint.currentYearReturnFormatted}`);
+            setTooltipVisible(true);
+            console.log(nearestDataPoint);
+        }
+
+        console.log(tooltipContent)
+        setTooltipVisible(true);
+    };
+
+    const handleMouseLeave = () => {
+        setTooltipVisible(false);
+    };
 
     const finalValueWCommas = annualROI?.finalValue ? annualROI.finalValue.toLocaleString() : 'N/A';
 
@@ -131,6 +172,8 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                 <svg
                 viewBox={`0 0 ${width} ${height}`}
                 className='my-0'
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
                 >
                     {/* Creates a linear color gradient on each of the bars */}
                     <defs>
@@ -165,7 +208,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                                             y={d.RoR >= 0 ? yScale(Math.max(0, d.RoR)) : height - margin.bottom - yScale(0)}  // Ensure y is positive for negative values
                                             width={xScale.bandwidth()}
                                             height={Math.abs(yScale(d.RoR) - yScale(0))}  // Calculate height from zero line
-                                            className="stroke-blue-950 stroke-[0.5]"
+                                            className="stroke-blue-950 stroke-[0.5] pointer-events-none"
                                             fill="url(#gradient)"
                                             initial={{ cy: yScale(0), scale: 0 }}
                                             animate={{ cy: yScale(d.RoR), scale: 1 }}
@@ -224,6 +267,18 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                         </g>
                     )}
                 </svg>
+                {tooltipVisible && (
+                <motion.div
+                    className="absolute p-1 text-lg sm:text-base md:text-xl lg:text-2xl text-blue-500 border-solid border-1 border-blue-900 bg-white rounded pointer-events-none"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 0.9 }}
+                    transition={{ type: 'spring', bounce: 0.5, duration: 0.5 }}
+                    style={{ top: yPos, left: xPos -margin.left -margin.right }}
+                    ref={tooltipRef}
+                >
+                    {tooltipContent}
+                </motion.div>
+                )}
             </div>
         </>
     );
