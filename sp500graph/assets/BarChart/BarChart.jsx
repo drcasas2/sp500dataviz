@@ -123,7 +123,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                             <h3 className="mx-auto px-auto py-2 my-auto text-[0.63rem] text-center items-center w-auto h-auto sm:min-w-[7.09rem] sm:mx-2 sm:px-1 sm:text-[0.65rem] sm:pb-0 sm:pt-1 sm:px-0 md:w-auto md:text-[0.73rem] md:px-auto lg:w-1/3 lg:py-0 lg:px-1 lg:text-[0.9rem]">Average Yearly Return For {roRDataNumberOfYears} Years</h3>
                             <h3 className='text-nowrap text-center px-auto my-auto w-auto text-[1.1rem] font-bold font-lato h-auto mx-auto sm:text-[1.15rem] sm:text-center lg:text-[1.9rem] lg:pl-4'>{Math.round(avgYearlyReturn * 1000)/1000}%</h3>
                         </div>
-                        <div className='text-[0.63rem] bg-slate-200 min-h-14 font-bold font-sans flex flex-wrap rounded w-auto h-auto px-2 py-auto mx-0 my-1 items-center justify-center text-center sm:h-auto sm:w-3/4 sm:text-[0.7rem] sm:top-[4.5rem] md:w-3/4 md:text-[0.9rem] lg:flex-column lg:flex-nowrap lg:mx-0 lg:w-2/3 lg:h-18 lg:text-center lg:px-auto lg:text-[1rem]'>
+                        <div className='text-[0.63rem] bg-slate-200 min-h-14 font-bold font-sans flex flex-wrap rounded w-auto h-auto px-2 py-auto mx-0 my-2 items-center justify-center text-center sm:h-auto sm:w-3/4 sm:text-[0.7rem] sm:top-[4.5rem] md:w-3/4 md:text-[0.9rem] lg:flex-column lg:flex-nowrap lg:mx-0 lg:w-2/3 lg:h-18 lg:text-center lg:px-auto lg:text-[1rem]'>
                             Your Final Return after {roRDataNumberOfYears} Years is ${finalValueWCommas}
                         </div>
                     </div>
