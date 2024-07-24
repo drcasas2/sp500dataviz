@@ -272,7 +272,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                 </svg>
                 {tooltipVisible && (
                 <motion.div
-                    className="absolute rounded bg-slate-700 text-white p-1 text-[0.7rem] text-nowrap text-center font-bold sm:text-sm md:text-lg lg:text-base text-blue-500 border-solid border-1 border-blue-900 bg-white rounded pointer-events-none"
+                    className="absolute rounded bg-slate-700 text-white p-1 text-[0.7rem] text-nowrap text-center font-bold sm:text-sm md:text-lg lg:text-base border-solid border-1 border-blue-900 rounded pointer-events-none"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.9 }}
                     transition={{ type: 'spring', bounce: 0.5, duration: 0.5 }}
