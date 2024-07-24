@@ -114,7 +114,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
 
         const { clientX, clientY } = event;
         const svgRect = event.target.getBoundingClientRect();
-        const mouseX = clientX - svgRect.left - margin.left - margin.right;
+        const mouseX = clientX - svgRect.left - margin.left;
         const mouseY = clientY - svgRect.top - margin.top;
 
         setXPos(mouseX);
@@ -124,8 +124,9 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
         let minDistance = Infinity;
 
         annualROI.iterationResults.forEach((d) => {
-            const dist = Math.abs(xScale(d.year) + (xScale.bandwidth()/2) - mouseX);
-            console.log(`svgRect : ${svgRect.left}, clientX : ${clientX} , d.year : ${d.year}, xScale(d.year) : ${xScale(d.year)}, xScale.bandwidth() : ${xScale.bandwidth()}`);
+            const barMidpoint = xScale(d.year) + xScale.bandwidth() / 2;
+            const dist = Math.abs(barMidpoint - mouseX);
+            console.log(`Year: ${d.year}, xScale: ${xScale(d.year)}, mouseX: ${mouseX}, Distance: ${dist}`);
             if (dist < minDistance) {
                 minDistance = dist;
                 nearestDataPoint = d;
@@ -133,11 +134,11 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
         });
 
         if (nearestDataPoint) {
-            setXPos((xScale(nearestDataPoint.year) - xScale.bandwidth()/2 + margin.left));
-            //setYPos(yScale(nearestDataPoint[1]));
-            setTooltipContent(`Your RoR in ${nearestDataPoint.year}: ${nearestDataPoint.currentYearReturnFormatted}`);
+            setXPos(xScale(nearestDataPoint.year) + xScale.bandwidth()/2 + margin.left/2);
+            setYPos(yScale(-9));
+            setTooltipContent(<div>Final Investment Amount <br /> ({nearestDataPoint.year}) <br /> ${nearestDataPoint.currentYearReturnFormatted}</div>);
             setTooltipVisible(true);
-            console.log(nearestDataPoint);
+            console.log(`Nearest Data Point : ${nearestDataPoint.year}`);
         }
 
         console.log(tooltipContent)
@@ -171,6 +172,8 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                 </div>
                 <svg
                 viewBox={`0 0 ${width} ${height}`}
+                width={width}
+                height={height}
                 className='my-0'
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
@@ -269,7 +272,7 @@ const BarChart = ({ height, width, barData, avgYearlyReturn, roRDataNumberOfYear
                 </svg>
                 {tooltipVisible && (
                 <motion.div
-                    className="absolute p-1 text-lg sm:text-base md:text-xl lg:text-2xl text-blue-500 border-solid border-1 border-blue-900 bg-white rounded pointer-events-none"
+                    className="absolute rounded bg-slate-700 text-white p-1 text-[0.7rem] text-nowrap text-center font-bold sm:text-sm md:text-lg lg:text-base text-blue-500 border-solid border-1 border-blue-900 bg-white rounded pointer-events-none"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 0.9 }}
                     transition={{ type: 'spring', bounce: 0.5, duration: 0.5 }}

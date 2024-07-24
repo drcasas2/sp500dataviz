@@ -150,7 +150,7 @@ export default function App() {
                         bounds.width > 0 &&(
                         <>
                             <motion.div
-                                className="h-auto w-auto mx-auto rounded overflow-hidden shadow-lg my-4"
+                                className=" mx-auto rounded overflow-hidden shadow-lg my-4"
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{
@@ -195,8 +195,8 @@ export default function App() {
                                     <PieChart3 className='' height={bounds.height} width={bounds.width} yearlySectorWeights={yearlySectorWeights} year={year}/>
                                 </motion.div>
                             </motion.div>
-                            <motion.div className='relative h-max w-2/3 mx-auto rounded overflow-hidden shadow-lg'>
-                                 <BarChart className='my-20' height={bounds.height*1.5} width={bounds.width} barData={barData} roRDataNumberOfYears={roRDataNumberOfYears} avgYearlyReturn={avgYearlyReturn}/>
+                            <motion.div className='relative h-max w-full mx-auto rounded overflow-hidden shadow-lg'>
+                                 <BarChart className='my-20' height={bounds.height} width={bounds.width} barData={barData} roRDataNumberOfYears={roRDataNumberOfYears} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>
                         </>
                         )
