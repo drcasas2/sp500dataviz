@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useMeasure } from "@uidotdev/usehooks";
 import AreaGraph2 from '../assets/AreaGraph/AreaGraph2.jsx';
+import GaugeChart from '../assets/GaugeChart/GaugeChart.jsx';
 import PieChart3 from '../assets/PieChart/PieChart3.jsx';
 import BarChart from "../assets/BarChart/BarChart.jsx";
 import API from '../utils/API.jsx';
@@ -198,6 +199,9 @@ export default function App() {
                             <motion.div className='relative h-max w-full mx-auto rounded overflow-hidden shadow-lg'>
                                  <BarChart className='my-20' height={bounds.height} width={bounds.width} barData={barData} roRDataNumberOfYears={roRDataNumberOfYears} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>
+                            <div>
+                                <GaugeChart height={bounds.height} width={bounds.width}/>
+                            </div>
                         </>
                         )
                     )}
