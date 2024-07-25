@@ -28,6 +28,9 @@ export default function App() {
     const [initialInvestment, setInitialInvestment] = useState();
     const [yearlyInvestment, setYearlyInvestment] = useState();
 
+    const [percentageChange, setPercentageChange] = useState(0);
+    const [currentStockPrice, setCurrentStockPrice] = useState(0);
+
     const fetchMonthlyData = async () => {
         const fetchedData = await API.fetchMonthlyData();
         const sortedData = fetchedData.reverse(); // Sorted the data in ascending order (oldest date first).
@@ -125,6 +128,28 @@ export default function App() {
         setYearlyInvestment(event.target.value);
     };
 
+    useEffect(() => {
+        if (yearlySectorWeights.length > 0) {
+            setYear(yearlySectorWeights[yearlySectorWeights.length - 1].Year);
+        }
+    }, [yearlySectorWeights]);
+
+    useEffect(() => {
+        const min = 500;
+        const max = 650;
+
+        const interval = setInterval(() => {
+            const newPercentageChange = (Math.random() * (10) - 5).toFixed(2); // Random number between -5 and 5
+            const newStockPrice = (Math.random() * (max - min) + min).toFixed(2); // Random number between min and max
+
+            setPercentageChange(parseFloat(newPercentageChange));
+            setCurrentStockPrice(parseFloat(newStockPrice));
+        }, 3000);
+
+        return () => clearInterval(interval); // Cleanup interval on component unmount
+    }, []);
+    
+
 
     return (
         <MantineProvider>  
@@ -199,8 +224,8 @@ export default function App() {
                             <motion.div className='relative h-max w-full mx-auto rounded overflow-hidden shadow-lg'>
                                  <BarChart className='my-20' height={bounds.height} width={bounds.width} barData={barData} roRDataNumberOfYears={roRDataNumberOfYears} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>
-                            <div>
-                                <GaugeChart height={bounds.height} width={bounds.width}/>
+                            <div className='relative h-max w-full mx-auto rounded overflow-hidden shadow-lg'>
+                                <GaugeChart height={bounds.height} width={bounds.width} percentageChange={percentageChange} currentStockPrice={currentStockPrice} />
                             </div>
                         </>
                         )
