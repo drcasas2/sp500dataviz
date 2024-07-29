@@ -201,7 +201,7 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
 
     return (
         <div className="">
-            <motion.svg className='' height={height} width={width} viewBox={`0 0 ${width} ${height}`}>
+            <motion.svg className='' height={height*1.05} width={width} viewBox={`0 0 ${width} ${height}`}>
                 <defs>
                     <radialGradient id="Green1" r='0.8'>
                         <stop offset="50%" stop-color="#ccff33" />
@@ -285,16 +285,31 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
 
                         {/* Radial Gauge Values */}
                         {breakpoints.map((breakpoint, i) => (
-                            <text
-                            x={`${(Math.cos(degToRad(breakpoint))*(radius*1.2)) + cx}`}
-                            y={`${(Math.sin(degToRad(breakpoint))*(radius*1.2)) + cy+5}`}
-                            textAnchor="middle"
-                            fontSize="1rem"
-                            fill="black"
-                            key={i}
+                            <g
+                                key={i}
+                                //transform={`translate(${(Math.cos(degToRad(breakpoint))*(radius*1.3)) + cx}, ${(Math.sin(degToRad(breakpoint))*(radius*1.3)) + cy+5})`}
                             >
-                                {i-4}
-                            </text>
+                                <line
+                                    x1={`${(Math.cos(degToRad(breakpoint))*(radius*1.1))+ cx}`}
+                                    y1={`${(Math.sin(degToRad(breakpoint))*(radius*1.1))+ cy}`}
+                                    x2={`${(Math.cos(degToRad(breakpoint))*(radius*1.18))+ cx}`}
+                                    y2={`${(Math.sin(degToRad(breakpoint))*(radius*1.18))+ cy}`}
+                                    className='stroke-sky-950 stroke-1'
+                                >
+
+                                </line>
+                                <text
+                                    textAnchor="middle"
+                                    fontSize="0.7rem"
+                                    fill="black"
+                                    className='align-middle justify-center'
+                                    x={`${(Math.cos(degToRad(breakpoint))*(radius*1.3)) + cx}`}
+                                    y={`${(Math.sin(degToRad(breakpoint))*(radius*1.25)) + cy+5}`}
+                                    key={i}
+                                >
+                                    {i-4}%
+                                </text>
+                            </g>
                         ))}
                     </g>
                     {/* Positive Circle Half */}
