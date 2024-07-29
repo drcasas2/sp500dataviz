@@ -325,7 +325,7 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
                                             x={`${(Math.cos(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.25)) + cx}`}
                                             y={`${(Math.sin(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.2)) + cy+5}`}
                                         >
-                                            {i-3.5}%
+                                            {/* {i-3.5}% */}
                                         </text>
                                     </g>
                                     )
