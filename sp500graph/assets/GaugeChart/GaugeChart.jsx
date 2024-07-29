@@ -311,8 +311,8 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
                                     (
                                     <g>
                                         <line
-                                            x1={`${(Math.cos(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.1))+ cx}`}
-                                            y1={`${(Math.sin(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.1))+ cy}`}
+                                            x1={`${(Math.cos(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.08))+ cx}`}
+                                            y1={`${(Math.sin(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.08))+ cy}`}
                                             x2={`${(Math.cos(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.14))+ cx}`}
                                             y2={`${(Math.sin(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.14))+ cy}`}
                                             className='stroke-sky-900 stroke-[0.5px]'
