@@ -294,10 +294,8 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
                                     y1={`${(Math.sin(degToRad(breakpoint))*(radius*1.1))+ cy}`}
                                     x2={`${(Math.cos(degToRad(breakpoint))*(radius*1.18))+ cx}`}
                                     y2={`${(Math.sin(degToRad(breakpoint))*(radius*1.18))+ cy}`}
-                                    className='stroke-sky-950 stroke-1'
-                                >
-
-                                </line>
+                                    className='stroke-sky-950 stroke-[0.5px]'
+                                />
                                 <text
                                     textAnchor="middle"
                                     fontSize="0.7rem"
@@ -309,6 +307,29 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
                                 >
                                     {i-4}%
                                 </text>
+                                {i-3.5 != 4.5 &&
+                                    (
+                                    <g>
+                                        <line
+                                            x1={`${(Math.cos(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.1))+ cx}`}
+                                            y1={`${(Math.sin(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.1))+ cy}`}
+                                            x2={`${(Math.cos(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.14))+ cx}`}
+                                            y2={`${(Math.sin(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.14))+ cy}`}
+                                            className='stroke-sky-900 stroke-[0.5px]'
+                                        />
+                                        <text
+                                            textAnchor="middle"
+                                            fontSize="0.4rem"
+                                            fill="black"
+                                            className='align-middle justify-center fill-sky-900'
+                                            x={`${(Math.cos(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.25)) + cx}`}
+                                            y={`${(Math.sin(degToRad(breakpoint+(breakpointDeg/2)))*(radius*1.2)) + cy+5}`}
+                                        >
+                                            {i-3.5}%
+                                        </text>
+                                    </g>
+                                    )
+                                }
                             </g>
                         ))}
                     </g>
