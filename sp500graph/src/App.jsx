@@ -223,9 +223,11 @@ export default function App() {
                             <motion.div className='relative h-max w-full mx-auto rounded overflow-hidden shadow-lg'>
                                  <BarChart className='my-20' height={bounds.height} width={bounds.width} barData={barData} roRDataNumberOfYears={roRDataNumberOfYears} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>
-                            <div className=' h-full w-full rounded shadow-lg'>
+                            <div className=' h-auto w-full mx-auto rounded shadow-lg'>
                                 <h2 className='text-center font-bold w-1/2 text-2xl mx-auto px-0'>Current Daily Change</h2>
-                                <GaugeChart height={bounds.height} width={bounds.width} />
+                                <div className='py-4'>
+                                    <GaugeChart height={bounds.height} width={bounds.width} />
+                                </div>
                             </div>
                         </>
                         )
