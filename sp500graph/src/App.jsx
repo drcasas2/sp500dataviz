@@ -28,8 +28,8 @@ export default function App() {
     const [initialInvestment, setInitialInvestment] = useState();
     const [yearlyInvestment, setYearlyInvestment] = useState();
 
-    const [percentageChange, setPercentageChange] = useState(0);
-    const [currentStockPrice, setCurrentStockPrice] = useState(0);
+    // const [percentageChange, setPercentageChange] = useState(0);
+    // const [currentStockPrice, setCurrentStockPrice] = useState(0);
 
     const fetchMonthlyData = async () => {
         const fetchedData = await API.fetchMonthlyData();
@@ -134,20 +134,19 @@ export default function App() {
         }
     }, [yearlySectorWeights]);
 
-    useEffect(() => {
-        const min = 500;
-        const max = 650;
+    // useEffect(() => {
+    //     const min = 500;
+    //     const max = 650;
 
-        const interval = setInterval(() => {
-            const newPercentageChange = (Math.random() * (10) - 5).toFixed(2); // Random number between -5 and 5
-            const newStockPrice = (Math.random() * (max - min) + min).toFixed(2); // Random number between min and max
+    //     const interval = setInterval(() => {
+    //         const newPercentageChange = (Math.random() * (10) - 5).toFixed(2); // Random number between -5 and 5
+    //         const newStockPrice = (Math.random() * (max - min) + min).toFixed(2); // Random number between min and max
+    //         // setPercentageChange(parseFloat(newPercentageChange));
+    //         // setCurrentStockPrice(parseFloat(newStockPrice));
+    //     }, 3000);
 
-            setPercentageChange(parseFloat(newPercentageChange));
-            setCurrentStockPrice(parseFloat(newStockPrice));
-        }, 3000);
-
-        return () => clearInterval(interval); // Cleanup interval on component unmount
-    }, []);
+    //     return () => clearInterval(interval); // Cleanup interval on component unmount
+    // }, []);
     
 
 
@@ -224,8 +223,9 @@ export default function App() {
                             <motion.div className='relative h-max w-full mx-auto rounded overflow-hidden shadow-lg'>
                                  <BarChart className='my-20' height={bounds.height} width={bounds.width} barData={barData} roRDataNumberOfYears={roRDataNumberOfYears} avgYearlyReturn={avgYearlyReturn}/>
                             </motion.div>
-                            <div className='relative h-max w-full mx-auto rounded overflow-hidden shadow-lg'>
-                                <GaugeChart height={bounds.height} width={bounds.width} percentageChange={percentageChange} currentStockPrice={currentStockPrice} />
+                            <div className=' h-full w-full rounded shadow-lg'>
+                                <h2 className='text-center font-bold w-1/2 text-2xl mx-auto px-0'>Current Daily Change</h2>
+                                <GaugeChart height={bounds.height} width={bounds.width} />
                             </div>
                         </>
                         )
