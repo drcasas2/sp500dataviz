@@ -1,8 +1,9 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import API from '../../utils/API.jsx';
 
-const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice }) => {
+const GaugeChart = ({ height, width, updatedStockPrice, updatedStockInfo }) => {
 
     const [gaugeColor1, setGaugeColor1] = useState("none");
     const [gaugeColor2, setGaugeColor2] = useState("none");
@@ -14,18 +15,12 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
     let scaledValue = 0;
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            const newPercentageChange = (Math.random() * (10) - 5).toFixed(2); // Random number between -5 and 5
-            const newStockPrice = (Math.random() * (max - min) + min).toFixed(2); // Random number between min and max
-            
-            // setPercentageChange1(parseFloat(1));
-            // setPercentageChange2(parseFloat(-2));
-            setPercentageChange(parseFloat(newPercentageChange));
-            setCurrentStockPrice(parseFloat(newStockPrice));
-        }, 2000);
 
-        return () => clearInterval(interval); // Cleanup interval on component unmount
-    }, []);
+        if(updatedStockPrice && updatedStockInfo) {
+            setPercentageChange(parseFloat(updatedStockInfo.todays_percent_change) || 0);
+            setCurrentStockPrice(parseFloat(updatedStockPrice || 0));
+        }
+    }, [updatedStockPrice, updatedStockInfo]);
 
     // Takes a percentage change from 0% to 4% and converts it to an arcLength from 0 to 0.35 since the total pathLength is 0.7, the starting point is the midpoint of the arc.
     const convertPathLength = (x) => {
@@ -381,7 +376,7 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
                     transform={`translate(${width/2},${height/2.1})`}
                     >
                         <text textAnchor="middle" fontSize="2.6rem" className=" fill-sky-950">
-                            {currentStockPrice}
+                            {currentStockPrice.toFixed(2)}
                         </text>
                         <text
                             y="25"
@@ -390,7 +385,7 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
                             stroke={percentageChange <= 0 ? gaugeColor2 : gaugeColor1}
                             fill={percentageChange <= 0 ? gaugeColor2 : gaugeColor1}
                         >
-                            {percentageChange}%
+                            {percentageChange.toFixed(2)}%
                         </text>
                     </g>
                     {/* Rotating line */}

@@ -27,6 +27,8 @@ export default function App() {
     const [roRDataNumberOfYears, setRoRDataNumberOfYears] = useState(0);
     const [initialInvestment, setInitialInvestment] = useState();
     const [yearlyInvestment, setYearlyInvestment] = useState();
+    const [updatedStockPrice, setUpdatedStockPrice] = useState();
+    const [updatedStockInfo, setUpdatedStockInfo] = useState();
 
     // const [percentageChange, setPercentageChange] = useState(0);
     // const [currentStockPrice, setCurrentStockPrice] = useState(0);
@@ -110,20 +112,28 @@ export default function App() {
 
     };
 
-    const fetchRealtimeQuote = async () => {
-        const quote = await API.realtimeQuote();
 
-        return quote;
-    }
+    useEffect(() => { 
+        const fetchQuotes = async () =>{
+            try {
+                const realtimeQuote = await API.realtimeQuote();
+                const prevDayCloseQuote = await API.prevDayCloseQuote();
+                setUpdatedStockPrice(realtimeQuote);
+                setUpdatedStockInfo(prevDayCloseQuote);
+            } catch (error) {
+                console.error('Error fetching quotes:', error);
+            }
+        };
+
+        const interval = setInterval(fetchQuotes, 30000);
+        fetchQuotes(); // Initial fetch
+
+        return () => clearInterval(interval); // Cleanup interval on component unmount
+    }, []);
+
     
-    const fetchPrevDayCloseQuote = async () => {
-        const quote = await API.prevDayCloseQuote();
-
-        return quote;
-    }
-
     useEffect(() => {
-        fetchMonthlyData().then(() => fetchYearlySectorWeights()).then(() => fetchYearlyReturns()).then(() => fetchRealtimeQuote()).then(() => fetchPrevDayCloseQuote()); // Chain async functions
+        fetchMonthlyData().then(() => fetchYearlySectorWeights()).then(() => fetchYearlyReturns()); // Chain async functions
     }, []);
 
     useEffect(() => {
@@ -238,7 +248,7 @@ export default function App() {
                             <div className=' h-auto w-full mx-auto rounded shadow-lg'>
                                 <h2 className='text-center font-bold w-1/2 text-2xl mx-auto px-0'>Current Daily Change</h2>
                                 <div className='py-4'>
-                                    <GaugeChart height={bounds.height} width={bounds.width} />
+                                    <GaugeChart height={bounds.height} width={bounds.width} updatedStockInfo={updatedStockInfo} updatedStockPrice={updatedStockPrice}  />
                                 </div>
                             </div>
                         </>
