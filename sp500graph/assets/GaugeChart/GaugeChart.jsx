@@ -14,9 +14,6 @@ const GaugeChart = ({ height, width, updatedPercentageChange, updatedStockPrice 
     let scaledValue = 0;
 
     useEffect(() => {
-        const min = 500;
-        const max = 650;
-
         const interval = setInterval(() => {
             const newPercentageChange = (Math.random() * (10) - 5).toFixed(2); // Random number between -5 and 5
             const newStockPrice = (Math.random() * (max - min) + min).toFixed(2); // Random number between min and max

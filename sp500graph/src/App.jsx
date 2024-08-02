@@ -110,8 +110,20 @@ export default function App() {
 
     };
 
+    const fetchRealtimeQuote = async () => {
+        const quote = await API.realtimeQuote();
+
+        return quote;
+    }
+    
+    const fetchPrevDayCloseQuote = async () => {
+        const quote = await API.prevDayCloseQuote();
+
+        return quote;
+    }
+
     useEffect(() => {
-        fetchMonthlyData().then(() => fetchYearlySectorWeights()).then(() => fetchYearlyReturns()); // Chain async functions
+        fetchMonthlyData().then(() => fetchYearlySectorWeights()).then(() => fetchYearlyReturns()).then(() => fetchRealtimeQuote()).then(() => fetchPrevDayCloseQuote()); // Chain async functions
     }, []);
 
     useEffect(() => {

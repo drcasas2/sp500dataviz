@@ -469,6 +469,52 @@ const API = {
             throw error; // Rethrow the error for handling in the calling code if needed
         }
     },
+    realtimeQuote: async () => {
+
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': 'd4254f019amsh4409182db38e154p1cf8b7jsn9e16217755dd',
+                'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
+            }
+        };
+
+        try {
+            const response = await fetch(`https://twelve-data1.p.rapidapi.com/price?format=json&outputsize=30&symbol=${stockTicker}`, options);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log('Realtime data:', data.price)
+            return data.price;
+        } catch (error) {
+            console.error('Error fetching Realtime data:', error);
+            throw error; // Rethrow the error for handling in the calling code if needed
+        }
+    },
+    prevDayCloseQuote: async() => {
+        const options = {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': 'd4254f019amsh4409182db38e154p1cf8b7jsn9e16217755dd',
+                'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
+            }
+        };
+
+        try {
+            const response = await fetch(`https://twelve-data1.p.rapidapi.com/quote?symbol=${stockTicker}&outputsize=30&format=json&interval=1day`, options);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            const relevantData = {previous_close: data.previous_close, todays_percent_change: data.percent_change, todays_open: data.open, fifty_two_week_high: data.fifty_two_week.high, fifty_two_week_low: data.fifty_two_week.low };
+            console.log('data:', relevantData)
+            return relevantData;
+        } catch (error) {
+            console.error('Error fetching Quote data:', error);
+            throw error; // Rethrow the error for handling in the calling code if needed
+        }
+    }
 };
 
 export default API;
