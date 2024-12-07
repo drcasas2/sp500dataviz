@@ -480,8 +480,8 @@ const API = {
     const timeSinceLastCall = now - API.lastApiCallTime;
 
     // If less than 3 seconds have passed since the last call, wait
-    if (timeSinceLastCall < 3000) {
-      await delay(3000 - timeSinceLastCall);
+    if (timeSinceLastCall < 12000) {
+      await delay(12000 - timeSinceLastCall);
     }
 
     const url = `https://twelve-data1.p.rapidapi.com/price?format=json&outputsize=30&symbol=${stockTicker}`;

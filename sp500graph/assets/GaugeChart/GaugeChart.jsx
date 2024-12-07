@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import API from '../../utils/API.jsx';
 
@@ -33,7 +33,7 @@ const GaugeChart = ({
   
 
   // Takes a percentage change from 0% to 4% and converts it to an arcLength from 0 to 0.35 since the total pathLength is 0.7, the starting point is the midpoint of the arc.
-  const convertPathLength = (x) => {
+  const convertPathLength = useCallback((x) => {
     if (percentageChange <= 4 && percentageChange >= -4) {
       const absPercentageChange = Math.abs(x);
 
@@ -50,11 +50,11 @@ const GaugeChart = ({
       scaledValue = 0.35;
     }
     return scaledValue;
-  };
+  },[]);
 
   useEffect(() => {
     convertPathLength(percentageChange);
-  }, [percentageChange]);
+  }, [percentageChange, currentPrice, convertPathLength]);
 
   // const handlePercentageChange = (percentageChange) => {
 
